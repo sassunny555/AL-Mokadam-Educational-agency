@@ -393,11 +393,20 @@
                     return;
                 }
 
+                // Helper to fix asset paths (add ../ for pages in subdirectory)
+                const fixPath = (path) => {
+                    if (!path) return null;
+                    // If path already has ../ or is absolute URL, return as-is
+                    if (path.startsWith('../') || path.startsWith('http')) return path;
+                    // Add ../ prefix for relative paths
+                    return '../' + path;
+                };
+
                 // Update header
                 document.getElementById('uniName').textContent = uni.name;
                 document.getElementById('uniLocation').textContent = uni.location || 'Malaysia';
                 document.getElementById('uniRanking').textContent = uni.ranking || '--';
-                document.getElementById('uniLogo').src = uni.logo || '../assets/images/logo.png';
+                document.getElementById('uniLogo').src = fixPath(uni.logo) || '../assets/images/logo.png';
                 document.getElementById('headerContent').style.display = 'flex';
                 document.getElementById('headerLoading').style.display = 'none';
                 document.title = `${uni.name} | AL-Mokadam`;
@@ -405,7 +414,7 @@
                 // Update overview
                 document.getElementById('overviewText').innerHTML = uni.overview || 'No overview available.';
                 if (uni.image) {
-                    document.getElementById('uniImage').src = uni.image;
+                    document.getElementById('uniImage').src = fixPath(uni.image);
                 }
 
                 // YouTube video

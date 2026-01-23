@@ -3,6 +3,22 @@
    With Course Picker & Category Management
    ============================================ */
 
+// ============================================
+// ADMIN SECURITY - WHITELIST CONFIGURATION
+// Add your admin email(s) here
+// ============================================
+const ADMIN_EMAILS = [
+    'admin@al-mokadam.edu',
+    'sassunny555@gmail.com',
+    'admin@email.com'  // Main admin account
+];
+
+// Check if user is an authorized admin
+function isAuthorizedAdmin(user) {
+    if (!user || !user.email) return false;
+    return ADMIN_EMAILS.includes(user.email.toLowerCase());
+}
+
 // Current state
 let currentSection = 'dashboard';
 let editingId = null;
@@ -22,7 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (auth) {
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    showDashboard(user);
+                    // Check if user is authorized admin
+                    if (isAuthorizedAdmin(user)) {
+                        showDashboard(user);
+                    } else {
+                        // Unauthorized - sign out and show error
+                        auth.signOut();
+                        showLogin();
+                        showUnauthorizedError(user.email);
+                    }
                 } else {
                     showLogin();
                 }
@@ -94,6 +118,14 @@ async function handleLogout() {
 function showLogin() {
     document.getElementById('loginContainer').style.display = 'flex';
     document.getElementById('adminContainer').style.display = 'none';
+}
+
+function showUnauthorizedError(email) {
+    const errorEl = document.getElementById('loginError');
+    if (errorEl) {
+        errorEl.innerHTML = `<strong>Access Denied</strong><br>The email "${email}" is not authorized to access this admin panel.<br>Please contact the administrator.`;
+        errorEl.style.display = 'block';
+    }
 }
 
 function showDashboard(user) {
@@ -289,7 +321,7 @@ async function loadUniversitiesAdmin() {
                     <td>${data.ranking ? '#' + data.ranking : 'N/A'}</td>
                     <td>${courseCount} courses</td>
                     <td class="action-btns">
-                        <button class="btn-view" onclick="window.open('university-detail.html?id=${doc.id}', '_blank')">View</button>
+                        <button class="btn-view" onclick="window.open('pages/university-detail.html?id=${doc.id}', '_blank')">View</button>
                         <button class="btn-edit" onclick="editItem('university', '${doc.id}')">Edit</button>
                         <button class="btn-delete" onclick="deleteItem('universities', '${doc.id}')">Delete</button>
                     </td>
@@ -516,6 +548,11 @@ async function handleSaveSettings(e) {
 // ============================================
 // Modal Functions
 // ============================================
+
+// Edit item - called by Edit buttons
+function editItem(type, id) {
+    openModal(type, id);
+}
 
 function openModal(type, id = null) {
     editingType = type;

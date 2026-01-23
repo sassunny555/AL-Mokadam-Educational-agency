@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ========================================
+    // ADMIN EMAIL WHITELIST
+    // Add authorized admin emails here
+    // ========================================
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email in [
+               'admin@al-mokadam.edu',
+               'sassunny555@gmail.com',
+               'admin@email.com'
+             ];
+    }
+    
+    // ========================================
+    // PUBLIC WEBSITE CONTENT
+    // Anyone can read, only admins can write
+    // ========================================
+    match /universities/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /courses/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /services/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /testimonials/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /team/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // ========================================
+    // INQUIRIES (Contact Form Submissions)
+    // Anyone can submit, only admins can read/modify
+    // ========================================
+    match /inquiries/{document} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // ========================================
+    // BLOCK ALL OTHER ACCESS
+    // ========================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
