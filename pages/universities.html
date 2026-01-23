@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Partner Universities - Explore top Malaysian universities with AL-Mokadam Educational Agency.">
+    <title>Universities | AL-Mokadam Educational Agency</title>
+    
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* Universities Page Styles */
+        .uni-page-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .uni-page-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .uni-page-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
+        }
+        
+        .uni-page-logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            background: var(--primary-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .uni-page-logo img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .uni-page-logo span {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .uni-page-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+        
+        .uni-rank {
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .uni-page-card p {
+            font-size: 0.9375rem;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+        }
+        
+        .uni-programs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .uni-programs span {
+            padding: 4px 12px;
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--gray-500);
+            grid-column: 1 / -1;
+        }
+        
+        @media (max-width: 1024px) {
+            .uni-page-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .uni-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <img src="../assets/images/logo.png" alt="AL-Mokadam Logo">
+                <span>AL-Mokadam</span>
+            </a>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="services.html">Services</a></li>
+                <li><a href="universities.html" class="active">Universities</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="../index.html#testimonials">Success Stories</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            
+            <div class="nav-cta">
+                <a href="contact.html" class="btn btn-primary">Get Started</a>
+            </div>
+            
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <span class="subtitle">Our Partners</span>
+            <h1>Malaysian Universities</h1>
+            <p>Explore top universities and find the perfect match for your education goals.</p>
+        </div>
+    </section>
+
+    <!-- Universities Grid Section -->
+    <section class="section" style="background: var(--gray-50);">
+        <div class="container">
+            <div class="uni-page-grid" id="universitiesGrid">
+                <div class="loading-state">
+                    <p>Loading universities...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta">
+        <div class="container">
+            <h2>Not Sure Which University?</h2>
+            <p>Let our experts help you choose the perfect university based on your goals!</p>
+            <a href="contact.html" class="btn btn-primary">Get Free Consultation</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 AL-Mokadam Educational Agency. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <script>
+        // Load universities from Firestore
+        async function loadUniversities() {
+            const grid = document.getElementById('universitiesGrid');
+            
+            try {
+                const universities = await getUniversities();
+                
+                if (universities.length === 0) {
+                    grid.innerHTML = `
+                        <div class="loading-state">
+                            <p>No universities found. Add some in the admin panel!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const html = universities.map(uni => `
+                    <a href="university-detail.html?id=${uni.id}" class="uni-page-card">
+                        <div class="uni-page-logo">
+                            ${uni.logo 
+                                ? `<img src="${uni.logo}" alt="${uni.name}">`
+                                : `<span>${uni.shortCode || uni.name.substring(0, 2).toUpperCase()}</span>`
+                            }
+                        </div>
+                        <h3>${uni.name}</h3>
+                        <p class="uni-rank">${uni.ranking ? `QS Ranking: #${uni.ranking}` : uni.location || 'Malaysia'}</p>
+                        <p>${uni.overview ? uni.overview.substring(0, 120) + '...' : 'Explore courses and programs at this university.'}</p>
+                        ${uni.programs && uni.programs.length > 0 
+                            ? `<div class="uni-programs">
+                                ${uni.programs.slice(0, 4).map(p => `<span>${p}</span>`).join('')}
+                               </div>`
+                            : ''
+                        }
+                        <span class="btn btn-outline">View Details</span>
+                    </a>
+                `).join('');
+                
+                grid.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading universities:', error);
+                grid.innerHTML = `
+                    <div class="loading-state">
+                        <p>Error loading universities. Please try again.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Load when Firebase is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(loadUniversities, 500);
+        });
+    </script>
+</body>
+</html>

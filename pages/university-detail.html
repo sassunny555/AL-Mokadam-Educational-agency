@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Details | AL-Mokadam Educational Agency</title>
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* University Detail Page Styles */
+        .uni-header {
+            padding: 140px 0 60px;
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        .uni-header-content {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .uni-logo-large {
+            width: 120px;
+            height: 120px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            flex-shrink: 0;
+        }
+        
+        .uni-logo-large img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .uni-header-info h1 {
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+        
+        .uni-meta {
+            display: flex;
+            gap: 24px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9375rem;
+        }
+        
+        .uni-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Tabs */
+        .uni-tabs {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 70px;
+            z-index: 100;
+        }
+        
+        .uni-tabs .container {
+            display: flex;
+            gap: 0;
+        }
+        
+        .tab-btn {
+            padding: 20px 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover, .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 60px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Overview */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        
+        .overview-text {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+        }
+        
+        .overview-image img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .video-embed {
+            margin-top: 40px;
+        }
+        
+        .video-embed iframe {
+            width: 100%;
+            height: 450px;
+            border-radius: var(--radius-lg);
+            border: none;
+        }
+        
+        /* Courses */
+        .courses-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .course-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+        }
+        
+        .course-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .course-info h4 {
+            font-size: 1.125rem;
+            margin-bottom: 4px;
+        }
+        
+        .course-info p {
+            color: var(--gray-500);
+            font-size: 0.9375rem;
+        }
+        
+        .course-details {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .course-fee {
+            text-align: right;
+        }
+        
+        .course-fee .amount {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        
+        .course-fee .label {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+        
+        /* Accommodation */
+        .accommodation-section {
+            background: var(--gray-50);
+        }
+        
+        .accommodation-intro {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            text-align: center;
+        }
+        
+        .accommodation-intro h2 {
+            margin-bottom: 12px;
+        }
+        
+        .propertyguru-frame {
+            width: 100%;
+            height: 700px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        
+        .propertyguru-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--gray-500);
+        }
+        
+        @media (max-width: 768px) {
+            .uni-header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .uni-meta {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .course-details {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .tab-btn {
+                padding: 16px 20px;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <img src="../assets/images/logo.png" alt="AL-Mokadam Logo">
+                <span>AL-Mokadam</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="services.html">Services</a></li>
+                <li><a href="universities.html">Universities</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="../index.html#testimonials">Success Stories</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="contact.html" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- University Header -->
+    <header class="uni-header" id="uniHeader">
+        <div class="container">
+            <div class="loading" id="headerLoading">Loading university...</div>
+            <div class="uni-header-content" id="headerContent" style="display: none;">
+                <div class="uni-logo-large">
+                    <img id="uniLogo" src="" alt="University Logo">
+                </div>
+                <div class="uni-header-info">
+                    <h1 id="uniName">University Name</h1>
+                    <div class="uni-meta">
+                        <span>📍 <span id="uniLocation">Location</span></span>
+                        <span>🏆 Ranking: #<span id="uniRanking">--</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tabs -->
+    <div class="uni-tabs">
+        <div class="container">
+            <button class="tab-btn active" data-tab="overview">Overview</button>
+            <button class="tab-btn" data-tab="courses">Courses</button>
+            <button class="tab-btn" data-tab="accommodation">Accommodation</button>
+        </div>
+    </div>
+
+    <!-- Tab Content: Overview -->
+    <section class="tab-content active" id="overview">
+        <div class="container">
+            <div class="overview-grid">
+                <div class="overview-text" id="overviewText">
+                    Loading overview...
+                </div>
+                <div class="overview-image">
+                    <img id="uniImage" src="../assets/images2/images003.png" alt="University Campus">
+                </div>
+            </div>
+            <div class="video-embed" id="videoEmbed" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Campus Video</h3>
+                <iframe id="youtubeFrame" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tab Content: Courses -->
+    <section class="tab-content" id="courses">
+        <div class="container">
+            <h2 style="margin-bottom: 30px;">Available Courses</h2>
+            <div class="courses-list" id="coursesList">
+                <div class="loading">Loading courses...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tab Content: Accommodation -->
+    <section class="tab-content accommodation-section" id="accommodation">
+        <div class="container">
+            <div class="accommodation-intro">
+                <h2>Find Accommodation Nearby</h2>
+                <p>Explore rental properties near the university using PropertyGuru.</p>
+            </div>
+            <div class="propertyguru-frame">
+                <iframe id="propertyFrame" src="https://www.propertyguru.com.my/property-for-rent?freetext=Kuala+Lumpur"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 AL-Mokadam Educational Agency. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Get university ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const uniId = urlParams.get('id');
+
+        // Load university data
+        async function loadUniversity() {
+            if (!uniId) {
+                document.getElementById('headerLoading').textContent = 'No university specified';
+                return;
+            }
+
+            try {
+                const uni = await getUniversityWithCourses(uniId);
+                
+                if (!uni) {
+                    document.getElementById('headerLoading').textContent = 'University not found';
+                    return;
+                }
+
+                // Update header
+                document.getElementById('uniName').textContent = uni.name;
+                document.getElementById('uniLocation').textContent = uni.location || 'Malaysia';
+                document.getElementById('uniRanking').textContent = uni.ranking || '--';
+                document.getElementById('uniLogo').src = uni.logo || '../assets/images/logo.png';
+                document.getElementById('headerContent').style.display = 'flex';
+                document.getElementById('headerLoading').style.display = 'none';
+                document.title = `${uni.name} | AL-Mokadam`;
+
+                // Update overview
+                document.getElementById('overviewText').innerHTML = uni.overview || 'No overview available.';
+                if (uni.image) {
+                    document.getElementById('uniImage').src = uni.image;
+                }
+
+                // YouTube video
+                if (uni.youtubeVideo) {
+                    const videoId = uni.youtubeVideo.includes('watch?v=') 
+                        ? uni.youtubeVideo.split('watch?v=')[1].split('&')[0]
+                        : uni.youtubeVideo;
+                    document.getElementById('youtubeFrame').src = `https://www.youtube.com/embed/${videoId}`;
+                    document.getElementById('videoEmbed').style.display = 'block';
+                }
+
+                // Courses
+                if (uni.courses && uni.courses.length > 0) {
+                    const coursesHtml = uni.courses.map(course => `
+                        <div class="course-item">
+                            <div class="course-info">
+                                <h4>${course.name}</h4>
+                                <p>${course.level || 'Bachelor'} • ${course.duration || '4 years'}</p>
+                            </div>
+                            <div class="course-details">
+                                <div class="course-fee">
+                                    <div class="amount">MYR ${(course.fees || 0).toLocaleString()}</div>
+                                    <div class="label">per year</div>
+                                </div>
+                                <a href="contact.html?course=${encodeURIComponent(course.name)}&uni=${encodeURIComponent(uni.name)}" class="btn btn-primary">Apply Now</a>
+                            </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('coursesList').innerHTML = coursesHtml;
+                } else {
+                    document.getElementById('coursesList').innerHTML = '<p>No courses listed yet.</p>';
+                }
+
+                // PropertyGuru iframe
+                if (uni.accommodationSearch) {
+                    document.getElementById('propertyFrame').src = 
+                        `https://www.propertyguru.com.my/property-for-rent?freetext=${uni.accommodationSearch}`;
+                }
+
+            } catch (error) {
+                console.error('Error loading university:', error);
+                document.getElementById('headerLoading').textContent = 'Error loading university';
+            }
+        }
+
+        // Load when Firebase is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(loadUniversity, 500);
+        });
+    </script>
+</body>
+</html>
