@@ -49,6 +49,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
+    match /courseFolders/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
     // ========================================
     // INQUIRIES (Contact Form Submissions)
     // Anyone can submit, only admins can read/modify

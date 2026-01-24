@@ -650,10 +650,6 @@ function closeModal() {
 // ============================================
 
 function getCourseForm() {
-    const categoryOptions = availableCategories.map(cat => 
-        `<option value="${cat}">${cat}</option>`
-    ).join('');
-    
     const folderOptions = courseFolders.map(f => 
         `<option value="${f.id}">${f.name}</option>`
     ).join('');
@@ -666,6 +662,14 @@ function getCourseForm() {
             </div>
             <div class="form-row">
                 <div class="form-group">
+                    <label>Folder *</label>
+                    <select id="itemFolder" required>
+                        <option value="">Select a folder...</option>
+                        ${folderOptions}
+                    </select>
+                    <p class="form-hint" style="color: #64748b; font-size: 0.8125rem;">Create folders first in Courses section</p>
+                </div>
+                <div class="form-group">
                     <label>Level *</label>
                     <select id="itemLevel" required>
                         <option value="Foundation">Foundation</option>
@@ -675,36 +679,20 @@ function getCourseForm() {
                         <option value="PhD">PhD</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Category *</label>
-                    <select id="itemCategory" required>
-                        ${categoryOptions}
-                    </select>
-                    <p class="form-hint"><a href="#" onclick="addNewCategory(); return false;">+ Add new category</a></p>
-                </div>
             </div>
             <div class="form-row">
-                <div class="form-group">
-                    <label>Folder</label>
-                    <select id="itemFolder">
-                        <option value="">No Folder (Uncategorized)</option>
-                        ${folderOptions}
-                    </select>
-                </div>
                 <div class="form-group">
                     <label>Duration</label>
                     <input type="text" id="itemDuration" placeholder="4 years">
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group">
                     <label>Credits</label>
                     <input type="text" id="itemCredits" placeholder="120 credits">
                 </div>
-                <div class="form-group">
-                    <label>Image Path</label>
-                    <input type="text" id="itemImage" placeholder="assets/images/course-cs.jpg">
-                </div>
+            </div>
+            <div class="form-group">
+                <label>Image Path</label>
+                <input type="text" id="itemImage" placeholder="assets/images/course-cs.jpg">
             </div>
             <div class="form-group">
                 <label>Description</label>
@@ -1116,7 +1104,6 @@ async function loadItemForEdit(type, id) {
             case 'course':
                 document.getElementById('itemName').value = doc.name || '';
                 document.getElementById('itemLevel').value = doc.level || 'Bachelor';
-                document.getElementById('itemCategory').value = doc.category || 'Other';
                 document.getElementById('itemFolder').value = doc.folderId || '';
                 document.getElementById('itemDuration').value = doc.duration || '';
                 document.getElementById('itemCredits').value = doc.credits || '';
@@ -1223,11 +1210,13 @@ async function saveItem(e) {
     switch(editingType) {
         case 'course':
             const folderVal = document.getElementById('itemFolder').value;
+            // Get folder name as category
+            const selectedFolder = courseFolders.find(f => f.id === folderVal);
             data = {
                 name: document.getElementById('itemName').value,
                 level: document.getElementById('itemLevel').value,
-                category: document.getElementById('itemCategory').value,
                 folderId: folderVal || null,
+                category: selectedFolder ? selectedFolder.name : 'Uncategorized',
                 duration: document.getElementById('itemDuration').value,
                 credits: document.getElementById('itemCredits').value,
                 image: document.getElementById('itemImage').value,

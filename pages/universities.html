@@ -9,85 +9,127 @@
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="../css/styles.css">
     <style>
-        /* Universities Page Styles */
+        /* Universities Page - Cover Image Card Design */
         .uni-page-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
+            gap: 24px;
         }
         
         .uni-page-card {
             background: var(--white);
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            text-align: center;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--gray-100);
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
         }
         
         .uni-page-card:hover {
             border-color: var(--primary);
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-6px);
+        }
+        
+        .uni-cover-wrapper {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .uni-cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e8e0f0 0%, #f0e8f5 100%);
         }
         
         .uni-page-logo {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px;
-            background: var(--primary-light);
-            border-radius: var(--radius-md);
+            position: absolute;
+            bottom: -30px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            border: 3px solid var(--white);
         }
         
         .uni-page-logo img {
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 75%;
+            max-height: 75%;
             object-fit: contain;
         }
         
         .uni-page-logo span {
             font-family: var(--font-display);
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
         }
         
-        .uni-page-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 8px;
+        .uni-page-content {
+            padding: 40px 20px 20px;
         }
         
-        .uni-rank {
+        .uni-page-card h3 {
+            font-size: 1.25rem;
+            color: #1E293B;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+        
+        .uni-location {
             font-size: 0.875rem;
-            color: var(--primary);
-            font-weight: 500;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
             margin-bottom: 12px;
         }
         
-        .uni-page-card p {
-            font-size: 0.9375rem;
-            color: var(--gray-600);
-            margin-bottom: 16px;
+        .uni-location svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
         }
         
-        .uni-programs {
+        .uni-page-footer {
+            padding: 12px 20px;
+            border-top: 1px solid #e2e8f0;
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 20px;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
         }
         
-        .uni-programs span {
-            padding: 4px 12px;
-            background: var(--gray-100);
-            border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            color: var(--gray-600);
+        .uni-qs-label {
+            font-size: 0.8125rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .uni-qs-rank {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1E293B;
+        }
+        
+        .uni-qs-rank svg {
+            width: 18px;
+            height: 18px;
+            color: #64748b;
         }
         
         .loading-state {
@@ -189,6 +231,12 @@
     <script src="../js/main.js"></script>
     
     <script>
+        // Globe icon SVG
+        const globeIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
+        
+        // Location icon SVG
+        const locationIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`;
+        
         // Load universities from Firestore
         async function loadUniversities() {
             const grid = document.getElementById('universitiesGrid');
@@ -214,22 +262,32 @@
                 
                 const html = universities.map(uni => `
                     <a href="university-detail.html?id=${uni.id}" class="uni-page-card">
-                        <div class="uni-page-logo">
-                            ${uni.logo 
-                                ? `<img src="${fixPath(uni.logo)}" alt="${uni.name}">`
-                                : `<span>${uni.shortCode || uni.name.substring(0, 2).toUpperCase()}</span>`
+                        <div class="uni-cover-wrapper">
+                            ${uni.image 
+                                ? `<img src="${fixPath(uni.image)}" alt="${uni.name}" class="uni-cover-image">`
+                                : `<div class="uni-cover-image"></div>`
                             }
+                            <div class="uni-page-logo">
+                                ${uni.logo 
+                                    ? `<img src="${fixPath(uni.logo)}" alt="${uni.name}">`
+                                    : `<span>${uni.shortCode || uni.name.substring(0, 3).toUpperCase()}</span>`
+                                }
+                            </div>
                         </div>
-                        <h3>${uni.name}</h3>
-                        <p class="uni-rank">${uni.ranking ? `QS Ranking: #${uni.ranking}` : uni.location || 'Malaysia'}</p>
-                        <p>${uni.overview ? uni.overview.substring(0, 120) + '...' : 'Explore courses and programs at this university.'}</p>
-                        ${uni.programs && uni.programs.length > 0 
-                            ? `<div class="uni-programs">
-                                ${uni.programs.slice(0, 4).map(p => `<span>${p}</span>`).join('')}
-                               </div>`
-                            : ''
-                        }
-                        <span class="btn btn-outline">View Details</span>
+                        <div class="uni-page-content">
+                            <h3>${uni.name}${uni.shortCode ? ` (${uni.shortCode})` : ''}</h3>
+                            <p class="uni-location">
+                                ${locationIcon}
+                                ${uni.location || 'Malaysia'}
+                            </p>
+                        </div>
+                        <div class="uni-page-footer">
+                            <span class="uni-qs-label">World Ranking</span>
+                            <span class="uni-qs-rank">
+                                ${globeIcon}
+                                QS #${uni.ranking || 'N/A'}
+                            </span>
+                        </div>
                     </a>
                 `).join('');
                 

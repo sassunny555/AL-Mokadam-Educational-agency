@@ -497,12 +497,11 @@ ul { list-style: none; }
 .service-card p { font-size: 0.9375rem; color: var(--gray-500); }
 
 /* ---------- Universities Section ---------- */
-.universities { background: var(--navy); position: relative; }
+.universities { background: var(--gray-50); position: relative; padding: var(--space-3xl) 0; }
 
-.universities .section-header .subtitle { color: var(--primary-light); }
+.universities .section-header .subtitle { color: var(--primary); }
 .universities .section-header h2,
-.universities .section-header p { color: var(--white); }
-.universities .section-header p { opacity: 0.8; }
+.universities .section-header p { color: var(--navy); }
 
 .uni-grid {
     display: grid;
@@ -511,37 +510,113 @@ ul { list-style: none; }
 }
 
 .uni-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-lg);
+    background: var(--white);
+    border-radius: 16px;
     padding: var(--space-xl);
-    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--gray-100);
     transition: all var(--transition-normal);
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
 }
 
 .uni-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary);
+}
+
+.uni-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
 }
 
 .uni-logo {
-    width: 70px;
-    height: 70px;
-    margin: 0 auto var(--space-md);
-    background: var(--white);
-    border-radius: var(--radius-md);
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--navy) 100%);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--white);
+    flex-shrink: 0;
 }
 
-.uni-card h4 { font-size: 1rem; color: var(--white); margin-bottom: var(--space-xs); }
-.uni-card p { font-size: 0.875rem; color: rgba(255, 255, 255, 0.6); }
+.uni-ranking-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    background: var(--gray-100);
+    padding: 6px 10px;
+    border-radius: 20px;
+}
+
+.uni-ranking-badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+.uni-card h4 { 
+    font-size: 1.125rem; 
+    color: var(--navy); 
+    margin-bottom: 8px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.uni-card .uni-location { 
+    font-size: 0.875rem; 
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: var(--space-lg);
+}
+
+.uni-card .uni-location svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.uni-card-footer {
+    padding-top: var(--space-md);
+    border-top: 1px dashed var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.uni-qs-label {
+    font-size: 0.8125rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.uni-qs-rank {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.uni-qs-rank svg {
+    width: 18px;
+    height: 18px;
+    color: var(--gray-500);
+}
 
 /* ---------- Why Malaysia Section ---------- */
 .why-malaysia { background: var(--white); }
