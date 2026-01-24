@@ -6,12 +6,17 @@
     <title>University Details | AL-Mokadam Educational Agency</title>
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
-        /* University Detail Page Styles */
+        /* ============================================
+           University Detail Page - Enhanced Styles
+           ============================================ */
+        
+        /* Header */
         .uni-header {
-            padding: 140px 0 60px;
-            background: var(--primary);
-            color: var(--white);
+            padding: 140px 0 40px;
+            background: #FEF2F2;
         }
         
         .uni-header-content {
@@ -21,38 +26,63 @@
         }
         
         .uni-logo-large {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             background: var(--white);
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            flex-shrink: 0;
+            padding: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
         .uni-logo-large img {
             max-width: 100%;
             max-height: 100%;
+            object-fit: contain;
         }
         
         .uni-header-info h1 {
-            color: var(--white);
-            margin-bottom: 8px;
+            font-size: 2rem;
+            color: var(--navy);
+            margin-bottom: 16px;
         }
         
-        .uni-meta {
+        .uni-header-btns {
             display: flex;
-            gap: 24px;
-            color: rgba(255,255,255,0.8);
-            font-size: 0.9375rem;
+            gap: 12px;
         }
         
-        .uni-meta span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .btn-apply {
+            background: #DC2626;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-apply:hover {
+            background: #B91C1C;
+        }
+        
+        .btn-ask {
+            background: transparent;
+            color: var(--navy);
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-ask:hover {
+            background: var(--navy);
+            color: white;
         }
         
         /* Tabs */
@@ -70,20 +100,28 @@
         }
         
         .tab-btn {
-            padding: 20px 30px;
-            font-size: 1rem;
+            padding: 18px 24px;
+            font-size: 0.9375rem;
             font-weight: 500;
-            color: var(--gray-600);
+            color: var(--gray-500);
             background: none;
             border: none;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .tab-btn:hover, .tab-btn.active {
-            color: var(--primary);
+            color: var(--navy);
             border-bottom-color: var(--primary);
+        }
+        
+        .tab-btn i {
+            width: 18px;
+            height: 18px;
         }
         
         /* Tab Content */
@@ -96,109 +134,351 @@
             display: block;
         }
         
-        /* Overview */
-        .overview-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 40px;
+        /* ============================================
+           Overview Section
+           ============================================ */
+        
+        .overview-intro {
+            margin-bottom: 40px;
         }
         
-        .overview-text {
-            font-size: 1.0625rem;
+        .overview-intro h2 {
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+        
+        .overview-intro p {
+            font-size: 1rem;
             line-height: 1.8;
+            color: var(--gray-600);
+        }
+        
+        .overview-image {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 32px 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
         
         .overview-image img {
             width: 100%;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
+            height: auto;
+            display: block;
+        }
+        
+        .about-section {
+            margin-top: 48px;
+        }
+        
+        .about-section h3 {
+            font-size: 1.375rem;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+        
+        .about-section p {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--gray-600);
+            margin-bottom: 24px;
         }
         
         .video-embed {
-            margin-top: 40px;
+            margin-top: 32px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
         
         .video-embed iframe {
             width: 100%;
-            height: 450px;
-            border-radius: var(--radius-lg);
+            height: 400px;
             border: none;
         }
         
-        /* Courses */
-        .courses-list {
-            display: grid;
-            gap: 20px;
+        /* ============================================
+           Countdown Timer
+           ============================================ */
+        
+        .countdown-section {
+            background: #FEF2F2;
+            padding: 48px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 48px 0;
+            border: 1px solid #FECACA;
         }
         
-        .course-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px;
-            background: var(--white);
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius-lg);
-            transition: all 0.3s ease;
+        .countdown-section h3 {
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 8px;
         }
         
-        .course-item:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .course-info h4 {
-            font-size: 1.125rem;
-            margin-bottom: 4px;
-        }
-        
-        .course-info p {
+        .countdown-section p {
             color: var(--gray-500);
-            font-size: 0.9375rem;
+            margin-bottom: 24px;
         }
         
-        .course-details {
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .countdown-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px 24px;
+            min-width: 80px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .countdown-box .number {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--navy);
+            display: block;
+        }
+        
+        .countdown-box .label {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+        
+        .countdown-divider {
+            font-size: 2rem;
+            color: var(--gray-300);
+            align-self: center;
+        }
+        
+        .countdown-cta {
+            font-size: 0.9375rem;
+            color: var(--gray-600);
+        }
+        
+        /* ============================================
+           Grouped Courses Section
+           ============================================ */
+        
+        .courses-section h2 {
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 32px;
+        }
+        
+        .course-category {
+            margin-bottom: 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .category-header {
             display: flex;
             align-items: center;
-            gap: 30px;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--gray-50);
+            cursor: pointer;
+            transition: background 0.3s;
         }
         
-        .course-fee {
-            text-align: right;
+        .category-header:hover {
+            background: var(--gray-100);
         }
         
-        .course-fee .amount {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            font-weight: 700;
+        .category-header h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-header i {
+            transition: transform 0.3s;
+        }
+        
+        .course-category.open .category-header i {
+            transform: rotate(180deg);
+        }
+        
+        .category-courses {
+            display: none;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .course-category.open .category-courses {
+            display: block;
+        }
+        
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .course-table th {
+            text-align: left;
+            padding: 12px 20px;
+            background: var(--gray-50);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+        
+        .course-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.9375rem;
+            color: var(--gray-700);
+        }
+        
+        .course-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .course-table .fees {
+            font-weight: 600;
             color: var(--navy);
         }
         
-        .course-fee .label {
-            font-size: 0.8125rem;
+        /* ============================================
+           Quick Info Badges
+           ============================================ */
+        
+        .quick-info {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 48px 0;
+            padding: 40px;
+            background: var(--gray-50);
+            border-radius: 16px;
+        }
+        
+        .info-badge {
+            text-align: center;
+        }
+        
+        .info-badge .icon {
+            width: 60px;
+            height: 60px;
+            background: #DC2626;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .info-badge .icon i {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+        
+        .info-badge .value {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--navy);
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .info-badge .label {
+            font-size: 0.875rem;
             color: var(--gray-500);
         }
         
-        /* Accommodation */
+        /* ============================================
+           FAQ Section
+           ============================================ */
+        
+        .faq-section {
+            margin-top: 48px;
+        }
+        
+        .faq-section h2 {
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 24px;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--navy);
+        }
+        
+        .faq-question:hover {
+            color: var(--primary);
+        }
+        
+        .faq-question i {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.open .faq-question i {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            display: none;
+            padding-bottom: 20px;
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--gray-600);
+        }
+        
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+        
+        /* ============================================
+           Accommodation Section
+           ============================================ */
+        
         .accommodation-section {
             background: var(--gray-50);
         }
         
         .accommodation-intro {
-            max-width: 700px;
-            margin: 0 auto 40px;
             text-align: center;
+            max-width: 600px;
+            margin: 0 auto 40px;
         }
         
         .accommodation-intro h2 {
+            font-size: 1.5rem;
+            color: var(--navy);
             margin-bottom: 12px;
         }
         
         .propertyguru-frame {
             width: 100%;
-            height: 700px;
+            height: 600px;
             border: 1px solid var(--gray-200);
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
             overflow: hidden;
         }
         
@@ -208,42 +488,49 @@
             border: none;
         }
         
-        /* Loading State */
+        /* Loading */
         .loading {
             text-align: center;
             padding: 60px;
             color: var(--gray-500);
         }
         
+        /* Responsive */
         @media (max-width: 768px) {
             .uni-header-content {
                 flex-direction: column;
                 text-align: center;
             }
             
-            .uni-meta {
-                flex-wrap: wrap;
+            .uni-header-btns {
                 justify-content: center;
             }
             
-            .overview-grid {
-                grid-template-columns: 1fr;
+            .countdown-timer {
+                flex-wrap: wrap;
             }
             
-            .course-item {
+            .countdown-box {
+                min-width: 70px;
+                padding: 16px;
+            }
+            
+            .countdown-box .number {
+                font-size: 1.75rem;
+            }
+            
+            .quick-info {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-            
-            .course-details {
-                width: 100%;
-                justify-content: space-between;
+                gap: 32px;
             }
             
             .tab-btn {
-                padding: 16px 20px;
+                padding: 14px 16px;
                 font-size: 0.875rem;
+            }
+            
+            .tab-btn span {
+                display: none;
             }
         }
     </style>
@@ -284,9 +571,9 @@
                 </div>
                 <div class="uni-header-info">
                     <h1 id="uniName">University Name</h1>
-                    <div class="uni-meta">
-                        <span>📍 <span id="uniLocation">Location</span></span>
-                        <span>🏆 Ranking: #<span id="uniRanking">--</span></span>
+                    <div class="uni-header-btns">
+                        <button class="btn-apply" onclick="applyNow()">Apply Now</button>
+                        <button class="btn-ask" onclick="askUs()">Ask Us</button>
                     </div>
                 </div>
             </div>
@@ -296,26 +583,99 @@
     <!-- Tabs -->
     <div class="uni-tabs">
         <div class="container">
-            <button class="tab-btn active" data-tab="overview">Overview</button>
-            <button class="tab-btn" data-tab="courses">Courses</button>
-            <button class="tab-btn" data-tab="accommodation">Accommodation</button>
+            <button class="tab-btn active" data-tab="overview">
+                <i data-lucide="info"></i>
+                <span>Overview</span>
+            </button>
+            <button class="tab-btn" data-tab="courses">
+                <i data-lucide="graduation-cap"></i>
+                <span>Courses</span>
+            </button>
+            <button class="tab-btn" data-tab="accommodation">
+                <i data-lucide="home"></i>
+                <span>Accommodation</span>
+            </button>
         </div>
     </div>
 
     <!-- Tab Content: Overview -->
     <section class="tab-content active" id="overview">
         <div class="container">
-            <div class="overview-grid">
-                <div class="overview-text" id="overviewText">
-                    Loading overview...
+            <!-- Intro Section -->
+            <div class="overview-intro" id="overviewIntro">
+                <h2 id="studyAtTitle">Study at This University</h2>
+                <p id="introText">Loading...</p>
+            </div>
+            
+            <!-- Main Image -->
+            <div class="overview-image">
+                <img id="uniImage" src="../assets/images2/images003.png" alt="University Campus">
+            </div>
+            
+            <!-- About Section -->
+            <div class="about-section" id="aboutSection">
+                <h3 id="aboutTitle">About the University</h3>
+                <div id="aboutContent">Loading about content...</div>
+            </div>
+            
+            <!-- YouTube Video -->
+            <div class="video-embed" id="videoEmbed" style="display: none;">
+                <iframe id="youtubeFrame" src="" allowfullscreen></iframe>
+            </div>
+            
+            <!-- Countdown Timer -->
+            <div class="countdown-section" id="countdownSection" style="display: none;">
+                <h3>Register Now and Secure Your Spot!</h3>
+                <p>Your Future Starts Here. Register Today for the Upcoming Intake</p>
+                <div class="countdown-timer" id="countdownTimer">
+                    <div class="countdown-box">
+                        <span class="number" id="countDays">00</span>
+                        <span class="label">Days</span>
+                    </div>
+                    <span class="countdown-divider">:</span>
+                    <div class="countdown-box">
+                        <span class="number" id="countHours">00</span>
+                        <span class="label">Hours</span>
+                    </div>
+                    <span class="countdown-divider">:</span>
+                    <div class="countdown-box">
+                        <span class="number" id="countMinutes">00</span>
+                        <span class="label">Minutes</span>
+                    </div>
+                    <span class="countdown-divider">:</span>
+                    <div class="countdown-box">
+                        <span class="number" id="countSeconds">00</span>
+                        <span class="label">Seconds</span>
+                    </div>
                 </div>
-                <div class="overview-image">
-                    <img id="uniImage" src="../assets/images2/images003.png" alt="University Campus">
+                <p class="countdown-cta" id="countdownCta">Secure Your Seat Now!</p>
+            </div>
+            
+            <!-- Quick Info Badges -->
+            <div class="quick-info" id="quickInfo">
+                <div class="info-badge">
+                    <div class="icon"><i data-lucide="file-text"></i></div>
+                    <span class="value" id="offerLetterValue">Free</span>
+                    <span class="label">Offer Letter</span>
+                </div>
+                <div class="info-badge">
+                    <div class="icon"><i data-lucide="calendar"></i></div>
+                    <span class="value" id="intakeValue">Jan, Jul, Sep</span>
+                    <span class="label">Intake</span>
+                </div>
+                <div class="info-badge">
+                    <div class="icon"><i data-lucide="map-pin"></i></div>
+                    <span class="value" id="locationValue">Selangor</span>
+                    <span class="label">Location</span>
                 </div>
             </div>
-            <div class="video-embed" id="videoEmbed" style="display: none;">
-                <h3 style="margin-bottom: 20px;">Campus Video</h3>
-                <iframe id="youtubeFrame" src="" allowfullscreen></iframe>
+            
+            <!-- FAQ Section -->
+            <div class="faq-section" id="faqSection" style="display: none;">
+                <h2 id="faqTitle">Frequently Asked Questions</h2>
+                <div id="faqList">
+                    <!-- FAQs will be loaded here -->
+                </div>
             </div>
         </div>
     </section>
@@ -323,9 +683,11 @@
     <!-- Tab Content: Courses -->
     <section class="tab-content" id="courses">
         <div class="container">
-            <h2 style="margin-bottom: 30px;">Available Courses</h2>
-            <div class="courses-list" id="coursesList">
-                <div class="loading">Loading courses...</div>
+            <div class="courses-section">
+                <h2 id="coursesTitle">Courses and Fees for International Students</h2>
+                <div id="courseCategories">
+                    <div class="loading">Loading courses...</div>
+                </div>
             </div>
         </div>
     </section>
@@ -348,10 +710,6 @@
         <div class="container">
             <div class="footer-bottom">
                 <p>&copy; 2026 AL-Mokadam Educational Agency. All Rights Reserved.</p>
-                <div class="footer-bottom-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms & Conditions</a>
-                </div>
             </div>
         </div>
     </footer>
@@ -364,6 +722,9 @@
     <script src="../js/main.js"></script>
     
     <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
         // Tab functionality
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -377,6 +738,62 @@
         // Get university ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const uniId = urlParams.get('id');
+
+        // Helper to fix asset paths
+        const fixPath = (path) => {
+            if (!path) return null;
+            if (path.startsWith('../') || path.startsWith('http')) return path;
+            return '../' + path;
+        };
+
+        // Countdown timer
+        let countdownInterval;
+        function startCountdown(targetDate) {
+            const target = new Date(targetDate).getTime();
+            
+            countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const diff = target - now;
+                
+                if (diff <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdownSection').style.display = 'none';
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                document.getElementById('countDays').textContent = String(days).padStart(2, '0');
+                document.getElementById('countHours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('countMinutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('countSeconds').textContent = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // FAQ toggle
+        function toggleFaq(element) {
+            element.parentElement.classList.toggle('open');
+        }
+
+        // Course category toggle
+        function toggleCategory(element) {
+            element.parentElement.classList.toggle('open');
+        }
+
+        // Apply now
+        function applyNow() {
+            const uniName = document.getElementById('uniName').textContent;
+            window.location.href = `contact.html?action=apply&uni=${encodeURIComponent(uniName)}`;
+        }
+
+        // Ask us
+        function askUs() {
+            const uniName = document.getElementById('uniName').textContent;
+            window.location.href = `contact.html?action=ask&uni=${encodeURIComponent(uniName)}`;
+        }
 
         // Load university data
         async function loadUniversity() {
@@ -393,26 +810,19 @@
                     return;
                 }
 
-                // Helper to fix asset paths (add ../ for pages in subdirectory)
-                const fixPath = (path) => {
-                    if (!path) return null;
-                    // If path already has ../ or is absolute URL, return as-is
-                    if (path.startsWith('../') || path.startsWith('http')) return path;
-                    // Add ../ prefix for relative paths
-                    return '../' + path;
-                };
-
                 // Update header
                 document.getElementById('uniName').textContent = uni.name;
-                document.getElementById('uniLocation').textContent = uni.location || 'Malaysia';
-                document.getElementById('uniRanking').textContent = uni.ranking || '--';
                 document.getElementById('uniLogo').src = fixPath(uni.logo) || '../assets/images/logo.png';
                 document.getElementById('headerContent').style.display = 'flex';
                 document.getElementById('headerLoading').style.display = 'none';
                 document.title = `${uni.name} | AL-Mokadam`;
 
-                // Update overview
-                document.getElementById('overviewText').innerHTML = uni.overview || 'No overview available.';
+                // Overview
+                document.getElementById('studyAtTitle').textContent = `Study at ${uni.name}`;
+                document.getElementById('introText').textContent = uni.intro || uni.overview || 'Welcome to this prestigious university.';
+                document.getElementById('aboutTitle').textContent = `About ${uni.name}`;
+                document.getElementById('aboutContent').innerHTML = uni.aboutContent || uni.overview || 'Information coming soon.';
+                
                 if (uni.image) {
                     document.getElementById('uniImage').src = fixPath(uni.image);
                 }
@@ -426,26 +836,85 @@
                     document.getElementById('videoEmbed').style.display = 'block';
                 }
 
-                // Courses
-                if (uni.courses && uni.courses.length > 0) {
-                    const coursesHtml = uni.courses.map(course => `
-                        <div class="course-item">
-                            <div class="course-info">
-                                <h4>${course.name}</h4>
-                                <p>${course.level || 'Bachelor'} • ${course.duration || '4 years'}</p>
+                // Countdown timer
+                if (uni.nextIntakeDate) {
+                    document.getElementById('countdownSection').style.display = 'block';
+                    startCountdown(uni.nextIntakeDate.toDate ? uni.nextIntakeDate.toDate() : uni.nextIntakeDate);
+                }
+
+                // Quick info
+                document.getElementById('offerLetterValue').textContent = uni.offerLetterFree !== false ? 'Free' : 'Paid';
+                document.getElementById('intakeValue').textContent = uni.intakeMonths?.join(', ') || 'Jan, Jul, Sep';
+                document.getElementById('locationValue').textContent = uni.location || 'Malaysia';
+
+                // FAQs
+                if (uni.faqs && uni.faqs.length > 0) {
+                    document.getElementById('faqSection').style.display = 'block';
+                    document.getElementById('faqTitle').textContent = `Frequently Asked Questions About ${uni.name}`;
+                    
+                    const faqHtml = uni.faqs.map(faq => `
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFaq(this)">
+                                <span>${faq.question}</span>
+                                <i data-lucide="plus"></i>
                             </div>
-                            <div class="course-details">
-                                <div class="course-fee">
-                                    <div class="amount">MYR ${(course.fees || 0).toLocaleString()}</div>
-                                    <div class="label">per year</div>
-                                </div>
-                                <a href="contact.html?course=${encodeURIComponent(course.name)}&uni=${encodeURIComponent(uni.name)}" class="btn btn-primary">Apply Now</a>
-                            </div>
+                            <div class="faq-answer">${faq.answer}</div>
                         </div>
                     `).join('');
-                    document.getElementById('coursesList').innerHTML = coursesHtml;
+                    
+                    document.getElementById('faqList').innerHTML = faqHtml;
+                    lucide.createIcons();
+                }
+
+                // Courses - grouped by category
+                if (uni.courses && uni.courses.length > 0) {
+                    document.getElementById('coursesTitle').textContent = `${uni.name} Courses and Fees for International Students`;
+                    
+                    // Group courses by category
+                    const grouped = {};
+                    uni.courses.forEach(course => {
+                        const category = course.category || 'Other';
+                        if (!grouped[category]) grouped[category] = [];
+                        grouped[category].push(course);
+                    });
+                    
+                    let coursesHtml = '';
+                    Object.keys(grouped).forEach((category, index) => {
+                        const courses = grouped[category];
+                        coursesHtml += `
+                            <div class="course-category ${index === 0 ? 'open' : ''}">
+                                <div class="category-header" onclick="toggleCategory(this)">
+                                    <h4><i data-lucide="folder"></i> ${category}</h4>
+                                    <i data-lucide="chevron-down"></i>
+                                </div>
+                                <div class="category-courses">
+                                    <table class="course-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Program</th>
+                                                <th>Tuition Fees per Year</th>
+                                                <th>Duration</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${courses.map(c => `
+                                                <tr>
+                                                    <td>${c.name}</td>
+                                                    <td class="fees">MYR ${(c.fees || 0).toLocaleString()}</td>
+                                                    <td>${c.duration || '3-4 years'}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    document.getElementById('courseCategories').innerHTML = coursesHtml;
+                    lucide.createIcons();
                 } else {
-                    document.getElementById('coursesList').innerHTML = '<p>No courses listed yet.</p>';
+                    document.getElementById('courseCategories').innerHTML = '<p>No courses listed yet.</p>';
                 }
 
                 // PropertyGuru iframe

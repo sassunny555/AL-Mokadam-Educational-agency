@@ -579,6 +579,57 @@ function openModal(type, id = null) {
     if (id) loadItemForEdit(type, id);
 }
 
+// ============================================
+// FAQ Editor Functions
+// ============================================
+
+let faqCounter = 0;
+
+function addFaqRow(question = '', answer = '') {
+    const editor = document.getElementById('faqEditor');
+    const hint = document.getElementById('noFaqsHint');
+    if (hint) hint.style.display = 'none';
+    
+    const faqId = `faq_${faqCounter++}`;
+    const div = document.createElement('div');
+    div.className = 'faq-row';
+    div.id = faqId;
+    div.style.cssText = 'background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 12px;';
+    div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="font-size: 0.875rem; color: #64748b;">FAQ Item</strong>
+            <button type="button" onclick="removeFaqRow('${faqId}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Remove</button>
+        </div>
+        <input type="text" class="faq-question" placeholder="Question" value="${question.replace(/"/g, '&quot;')}" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px;">
+        <textarea class="faq-answer" placeholder="Answer" rows="2" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; resize: vertical;">${answer}</textarea>
+    `;
+    editor.appendChild(div);
+}
+
+function removeFaqRow(id) {
+    const row = document.getElementById(id);
+    if (row) row.remove();
+    
+    // Show hint if no FAQs left
+    const editor = document.getElementById('faqEditor');
+    if (editor.children.length === 1) { // Only the hint remains
+        const hint = document.getElementById('noFaqsHint');
+        if (hint) hint.style.display = 'block';
+    }
+}
+
+function getFaqsFromEditor() {
+    const faqs = [];
+    document.querySelectorAll('.faq-row').forEach(row => {
+        const question = row.querySelector('.faq-question').value.trim();
+        const answer = row.querySelector('.faq-answer').value.trim();
+        if (question && answer) {
+            faqs.push({ question, answer });
+        }
+    });
+    return faqs;
+}
+
 function closeModal() {
     document.getElementById('modalOverlay').classList.remove('active');
     editingId = null;
@@ -673,18 +724,26 @@ function getUniversityForm() {
                     <input type="number" id="itemRanking" placeholder="65">
                 </div>
             </div>
+            
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Content Sections</h4>
+            
             <div class="form-group">
-                <label>Overview / About</label>
-                <textarea id="itemOverview" placeholder="About this university..." rows="3"></textarea>
+                <label>Intro Text (short description for header)</label>
+                <textarea id="itemIntro" placeholder="Brief introduction shown at the top..." rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <label>About Content (detailed description, can include HTML)</label>
+                <textarea id="itemAboutContent" placeholder="Full university description. You can use HTML tags for formatting..." rows="5"></textarea>
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Logo Image Path</label>
-                    <input type="text" id="itemLogo" placeholder="assets/images/uni-um.png">
+                    <input type="text" id="itemLogo" placeholder="assets/universities/um-logo.png">
                 </div>
                 <div class="form-group">
                     <label>Campus Image Path</label>
-                    <input type="text" id="itemCampusImage" placeholder="assets/images/um-campus.jpg">
+                    <input type="text" id="itemCampusImage" placeholder="assets/universities/um-campus.jpg">
                 </div>
             </div>
             <div class="form-row">
@@ -699,9 +758,37 @@ function getUniversityForm() {
             </div>
             
             <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Intake & Quick Info</h4>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Next Intake Date (for countdown)</label>
+                    <input type="date" id="itemNextIntake">
+                </div>
+                <div class="form-group">
+                    <label>Intake Months (comma-separated)</label>
+                    <input type="text" id="itemIntakeMonths" placeholder="Jan, Jul, Sep">
+                </div>
+            </div>
+            <div class="checkbox-group" style="margin-bottom: 16px;">
+                <input type="checkbox" id="itemOfferLetterFree" checked>
+                <label for="itemOfferLetterFree">Offer Letter is Free</label>
+            </div>
+            
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> FAQs</h4>
             
             <div class="form-group">
-                <label>Courses Offered</label>
+                <div id="faqEditor">
+                    <p class="empty-hint" id="noFaqsHint">No FAQs added. Click button below to add.</p>
+                </div>
+                <button type="button" class="btn btn-outline" onclick="addFaqRow()" style="margin-top: 10px;">+ Add FAQ</button>
+            </div>
+            
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Courses Offered</h4>
+            
+            <div class="form-group">
                 <div class="course-picker">
                     <div class="course-search-container">
                         <input type="text" id="courseSearchInput" placeholder="Search courses or type to create new..." oninput="filterCourses(this.value)" autocomplete="off">
@@ -1027,12 +1114,26 @@ async function loadItemForEdit(type, id) {
                 document.getElementById('itemName').value = doc.name || '';
                 document.getElementById('itemLocation').value = doc.location || '';
                 document.getElementById('itemRanking').value = doc.ranking || '';
-                document.getElementById('itemOverview').value = doc.overview || '';
+                document.getElementById('itemIntro').value = doc.intro || '';
+                document.getElementById('itemAboutContent').value = doc.aboutContent || doc.overview || '';
                 document.getElementById('itemLogo').value = doc.logo || '';
                 document.getElementById('itemCampusImage').value = doc.image || '';
                 document.getElementById('itemYouTube').value = doc.youtubeVideo || '';
                 document.getElementById('itemAccommodation').value = doc.accommodationSearch || '';
                 document.getElementById('itemActive').checked = doc.active !== false;
+                
+                // New fields
+                if (doc.nextIntakeDate) {
+                    const date = doc.nextIntakeDate.toDate ? doc.nextIntakeDate.toDate() : new Date(doc.nextIntakeDate);
+                    document.getElementById('itemNextIntake').value = date.toISOString().split('T')[0];
+                }
+                document.getElementById('itemIntakeMonths').value = doc.intakeMonths?.join(', ') || '';
+                document.getElementById('itemOfferLetterFree').checked = doc.offerLetterFree !== false;
+                
+                // Load FAQs
+                if (doc.faqs && doc.faqs.length > 0) {
+                    doc.faqs.forEach(faq => addFaqRow(faq.question, faq.answer));
+                }
                 
                 // Load course offerings
                 if (doc.courseOfferings && doc.courseOfferings.length > 0) {
@@ -1042,6 +1143,7 @@ async function loadItemForEdit(type, id) {
                             courseId: co.courseId,
                             name: course ? course.name : 'Unknown Course',
                             level: course ? course.level : 'Bachelor',
+                            category: course ? course.category : 'Other',
                             fees: co.fees || 0,
                             intake: co.intake || ['September']
                         };
@@ -1118,17 +1220,30 @@ async function saveItem(e) {
                 intake: c.intake
             }));
             
+            // Parse intake months
+            const intakeMonthsStr = document.getElementById('itemIntakeMonths').value;
+            const intakeMonths = intakeMonthsStr ? intakeMonthsStr.split(',').map(m => m.trim()).filter(m => m) : [];
+            
+            // Parse next intake date
+            const nextIntakeDateStr = document.getElementById('itemNextIntake').value;
+            const nextIntakeDate = nextIntakeDateStr ? new Date(nextIntakeDateStr) : null;
+            
             data = {
                 shortCode: document.getElementById('itemShortCode').value,
                 order: parseInt(document.getElementById('itemOrder').value) || 1,
                 name: document.getElementById('itemName').value,
                 location: document.getElementById('itemLocation').value,
                 ranking: parseInt(document.getElementById('itemRanking').value) || null,
-                overview: document.getElementById('itemOverview').value,
+                intro: document.getElementById('itemIntro').value,
+                aboutContent: document.getElementById('itemAboutContent').value,
                 logo: document.getElementById('itemLogo').value,
                 image: document.getElementById('itemCampusImage').value,
                 youtubeVideo: document.getElementById('itemYouTube').value,
                 accommodationSearch: document.getElementById('itemAccommodation').value,
+                nextIntakeDate: nextIntakeDate,
+                intakeMonths: intakeMonths,
+                offerLetterFree: document.getElementById('itemOfferLetterFree').checked,
+                faqs: getFaqsFromEditor(),
                 courseOfferings: courseOfferings,
                 active: document.getElementById('itemActive').checked
             };
