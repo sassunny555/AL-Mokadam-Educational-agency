@@ -169,22 +169,14 @@
                 <section id="coursesSection" class="content-section">
                     <div class="section-header-admin">
                         <h3>Manage Courses</h3>
-                        <button class="btn btn-primary" onclick="openModal('course')">+ Add Course</button>
+                        <div class="header-btns">
+                            <button class="btn btn-outline" onclick="openFolderModal()">+ Create Folder</button>
+                            <button class="btn btn-primary" onclick="openModal('course')">+ Add Course</button>
+                        </div>
                     </div>
-                    <div class="table-container">
-                        <table id="coursesTable">
-                            <thead>
-                                <tr>
-                                    <th>Icon</th>
-                                    <th>Title</th>
-                                    <th>Duration</th>
-                                    <th>Fees</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                    <div class="folder-tree" id="folderTree">
+                        <!-- Folders and courses rendered dynamically -->
+                        <div class="loading-state">Loading courses...</div>
                     </div>
                 </section>
 

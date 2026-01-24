@@ -820,3 +820,317 @@ tbody tr:hover {
     }
 }
 
+/* ---------- Folder Tree (Courses Section) ---------- */
+.folder-tree {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--gray-100);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.loading-state {
+    padding: 40px;
+    text-align: center;
+    color: var(--gray-400);
+}
+
+.folder-item {
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.folder-item:last-child {
+    border-bottom: none;
+}
+
+.folder-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--gray-50);
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.folder-header:hover {
+    background: var(--gray-100);
+}
+
+.folder-header.drag-over {
+    background: #FEE2E2;
+    border: 2px dashed var(--admin-primary);
+}
+
+.folder-toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    color: var(--gray-400);
+}
+
+.folder-item.open .folder-toggle {
+    transform: rotate(90deg);
+}
+
+.folder-icon {
+    font-size: 1.25rem;
+}
+
+.folder-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--admin-secondary);
+}
+
+.folder-count {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    background: var(--gray-200);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.folder-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.folder-header:hover .folder-actions {
+    opacity: 1;
+}
+
+.folder-actions button {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    background: transparent;
+    color: var(--gray-500);
+}
+
+.folder-actions button:hover {
+    background: var(--gray-200);
+}
+
+.folder-actions .btn-delete-folder:hover {
+    background: #FEE2E2;
+    color: var(--admin-danger);
+}
+
+.folder-courses {
+    display: none;
+    padding: 0;
+}
+
+.folder-item.open .folder-courses {
+    display: block;
+}
+
+.course-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 12px 52px;
+    border-bottom: 1px solid var(--gray-100);
+    transition: background 0.2s;
+    cursor: grab;
+}
+
+.course-row:hover {
+    background: var(--gray-50);
+}
+
+.course-row.dragging {
+    opacity: 0.5;
+    background: #FEE2E2;
+}
+
+.course-row:last-child {
+    border-bottom: none;
+}
+
+.course-drag-handle {
+    color: var(--gray-300);
+    cursor: grab;
+}
+
+.course-drag-handle:active {
+    cursor: grabbing;
+}
+
+.course-row-info {
+    flex: 1;
+}
+
+.course-row-info strong {
+    display: block;
+    color: var(--admin-secondary);
+    margin-bottom: 2px;
+}
+
+.course-row-info span {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+}
+
+.course-row .action-btns {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.course-row:hover .action-btns {
+    opacity: 1;
+}
+
+/* Uncategorized section */
+.uncategorized-section {
+    border-top: 2px solid var(--gray-200);
+}
+
+.uncategorized-header {
+    padding: 14px 20px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+.uncategorized-header.drag-over {
+    background: #FEE2E2;
+    border: 2px dashed var(--admin-primary);
+}
+
+/* Header buttons */
+.header-btns {
+    display: flex;
+    gap: 12px;
+}
+
+/* ---------- Folder Picker (University Form) ---------- */
+.folder-picker {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.picker-folder {
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.picker-folder:last-child {
+    border-bottom: none;
+}
+
+.picker-folder-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--white);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.picker-folder-header:hover {
+    background: var(--gray-50);
+}
+
+.picker-folder-header input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.picker-folder-toggle {
+    width: 16px;
+    height: 16px;
+    color: var(--gray-400);
+    transition: transform 0.2s;
+}
+
+.picker-folder.open .picker-folder-toggle {
+    transform: rotate(90deg);
+}
+
+.picker-folder-name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--admin-secondary);
+}
+
+.picker-folder-count {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+.picker-courses {
+    display: none;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+}
+
+.picker-folder.open .picker-courses {
+    display: block;
+}
+
+.picker-course {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px 10px 44px;
+    border-bottom: 1px solid var(--gray-100);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.picker-course:last-child {
+    border-bottom: none;
+}
+
+.picker-course:hover {
+    background: var(--gray-100);
+}
+
+.picker-course input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.picker-course-info {
+    flex: 1;
+}
+
+.picker-course-info strong {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--admin-secondary);
+}
+
+.picker-course-info span {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+/* Selected courses summary */
+.selected-summary {
+    margin-top: 12px;
+    padding: 12px;
+    background: #FEF2F2;
+    border-radius: 8px;
+    color: var(--admin-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}

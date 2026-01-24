@@ -576,7 +576,15 @@ function openModal(type, id = null) {
     modalBody.innerHTML = formHTML;
     document.getElementById('modalOverlay').classList.add('active');
     
-    if (id) loadItemForEdit(type, id);
+    if (id) {
+        loadItemForEdit(type, id);
+    } else if (type === 'university') {
+        // Initialize folder picker for new university
+        setTimeout(() => {
+            const container = document.getElementById('coursePickerContainer');
+            if (container) container.innerHTML = renderFolderPicker();
+        }, 100);
+    }
 }
 
 // ============================================
@@ -646,6 +654,10 @@ function getCourseForm() {
         `<option value="${cat}">${cat}</option>`
     ).join('');
     
+    const folderOptions = courseFolders.map(f => 
+        `<option value="${f.id}">${f.name}</option>`
+    ).join('');
+    
     return `
         <form id="itemForm" onsubmit="saveItem(event)">
             <div class="form-group">
@@ -673,17 +685,26 @@ function getCourseForm() {
             </div>
             <div class="form-row">
                 <div class="form-group">
+                    <label>Folder</label>
+                    <select id="itemFolder">
+                        <option value="">No Folder (Uncategorized)</option>
+                        ${folderOptions}
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Duration</label>
                     <input type="text" id="itemDuration" placeholder="4 years">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label>Credits</label>
                     <input type="text" id="itemCredits" placeholder="120 credits">
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Image Path</label>
-                <input type="text" id="itemImage" placeholder="assets/images/course-cs.jpg">
+                <div class="form-group">
+                    <label>Image Path</label>
+                    <input type="text" id="itemImage" placeholder="assets/images/course-cs.jpg">
+                </div>
             </div>
             <div class="form-group">
                 <label>Description</label>
@@ -789,14 +810,8 @@ function getUniversityForm() {
             <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Courses Offered</h4>
             
             <div class="form-group">
-                <div class="course-picker">
-                    <div class="course-search-container">
-                        <input type="text" id="courseSearchInput" placeholder="Search courses or type to create new..." oninput="filterCourses(this.value)" autocomplete="off">
-                        <div class="course-suggestions" id="courseSuggestions"></div>
-                    </div>
-                    <div class="selected-courses" id="selectedCourses">
-                        <p class="empty-hint" id="noCoursesHint">No courses added yet. Search above to add courses.</p>
-                    </div>
+                <div class="course-picker" id="coursePickerContainer">
+                    <!-- Folder picker rendered dynamically -->
                 </div>
             </div>
             
@@ -1102,6 +1117,7 @@ async function loadItemForEdit(type, id) {
                 document.getElementById('itemName').value = doc.name || '';
                 document.getElementById('itemLevel').value = doc.level || 'Bachelor';
                 document.getElementById('itemCategory').value = doc.category || 'Other';
+                document.getElementById('itemFolder').value = doc.folderId || '';
                 document.getElementById('itemDuration').value = doc.duration || '';
                 document.getElementById('itemCredits').value = doc.credits || '';
                 document.getElementById('itemImage').value = doc.image || '';
@@ -1141,15 +1157,20 @@ async function loadItemForEdit(type, id) {
                         const course = availableCourses.find(c => c.id === co.courseId);
                         return {
                             courseId: co.courseId,
-                            name: course ? course.name : 'Unknown Course',
+                            courseName: course ? course.name : 'Unknown Course',
                             level: course ? course.level : 'Bachelor',
                             category: course ? course.category : 'Other',
                             fees: co.fees || 0,
                             intake: co.intake || ['September']
                         };
                     });
-                    renderSelectedCourses();
                 }
+                // Initialize folder picker
+                setTimeout(() => {
+                    const container = document.getElementById('coursePickerContainer');
+                    if (container) container.innerHTML = renderFolderPicker();
+                    setIndeterminateStates();
+                }, 100);
                 break;
                 
             case 'team':
@@ -1201,10 +1222,12 @@ async function saveItem(e) {
     
     switch(editingType) {
         case 'course':
+            const folderVal = document.getElementById('itemFolder').value;
             data = {
                 name: document.getElementById('itemName').value,
                 level: document.getElementById('itemLevel').value,
                 category: document.getElementById('itemCategory').value,
+                folderId: folderVal || null,
                 duration: document.getElementById('itemDuration').value,
                 credits: document.getElementById('itemCredits').value,
                 image: document.getElementById('itemImage').value,
@@ -1320,3 +1343,431 @@ async function deleteItem(collection, id) {
         alert('Error deleting item');
     }
 }
+
+// ============================================
+// FOLDER MANAGEMENT
+// ============================================
+
+let courseFolders = [];
+let draggedCourseId = null;
+
+// Load folders and courses with folder tree view
+async function loadCoursesWithFolders() {
+    const folderTree = document.getElementById('folderTree');
+    if (!folderTree) return;
+    
+    try {
+        // Load folders
+        const foldersSnap = await db.collection('courseFolders').orderBy('order', 'asc').get();
+        courseFolders = [];
+        foldersSnap.forEach(doc => {
+            courseFolders.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Load all courses
+        const coursesSnap = await db.collection('courses').orderBy('name', 'asc').get();
+        const allCourses = [];
+        coursesSnap.forEach(doc => {
+            allCourses.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Group courses by folder
+        const coursesByFolder = {};
+        const uncategorized = [];
+        
+        allCourses.forEach(course => {
+            if (course.folderId && courseFolders.some(f => f.id === course.folderId)) {
+                if (!coursesByFolder[course.folderId]) {
+                    coursesByFolder[course.folderId] = [];
+                }
+                coursesByFolder[course.folderId].push(course);
+            } else {
+                uncategorized.push(course);
+            }
+        });
+        
+        // Render folder tree
+        let html = '';
+        
+        // Render folders
+        courseFolders.forEach(folder => {
+            const courses = coursesByFolder[folder.id] || [];
+            html += renderFolder(folder, courses);
+        });
+        
+        // Render uncategorized
+        if (uncategorized.length > 0 || courseFolders.length === 0) {
+            html += renderUncategorizedSection(uncategorized);
+        }
+        
+        if (html === '') {
+            html = '<div class="loading-state">No courses yet. Click "+ Add Course" to create one.</div>';
+        }
+        
+        folderTree.innerHTML = html;
+        setupDragAndDrop();
+        
+    } catch (error) {
+        console.error('Error loading courses with folders:', error);
+        folderTree.innerHTML = '<div class="loading-state">Error loading courses</div>';
+    }
+}
+
+function renderFolder(folder, courses) {
+    const coursesHTML = courses.map(c => renderCourseRow(c)).join('');
+    return `
+        <div class="folder-item" data-folder-id="${folder.id}">
+            <div class="folder-header" onclick="toggleFolder('${folder.id}')" 
+                 ondragover="handleDragOver(event, '${folder.id}')"
+                 ondragleave="handleDragLeave(event)"
+                 ondrop="handleDrop(event, '${folder.id}')">
+                <span class="folder-toggle">▶</span>
+                <span class="folder-icon">📁</span>
+                <span class="folder-name">${folder.name}</span>
+                <span class="folder-count">${courses.length}</span>
+                <div class="folder-actions" onclick="event.stopPropagation()">
+                    <button onclick="renameFolder('${folder.id}', '${folder.name.replace(/'/g, "\\'")}')">Rename</button>
+                    <button class="btn-delete-folder" onclick="deleteFolder('${folder.id}')">Delete</button>
+                </div>
+            </div>
+            <div class="folder-courses">
+                ${coursesHTML || '<div class="empty-hint" style="padding: 16px 52px; font-size: 0.875rem;">No courses in this folder</div>'}
+            </div>
+        </div>
+    `;
+}
+
+function renderUncategorizedSection(courses) {
+    const coursesHTML = courses.map(c => renderCourseRow(c)).join('');
+    return `
+        <div class="uncategorized-section">
+            <div class="uncategorized-header"
+                 ondragover="handleDragOver(event, null)"
+                 ondragleave="handleDragLeave(event)"
+                 ondrop="handleDrop(event, null)">
+                <span>📋</span>
+                <span>Uncategorized (${courses.length})</span>
+            </div>
+            <div class="folder-courses" style="display: block;">
+                ${coursesHTML}
+            </div>
+        </div>
+    `;
+}
+
+function renderCourseRow(course) {
+    return `
+        <div class="course-row" draggable="true" data-course-id="${course.id}"
+             ondragstart="handleDragStart(event, '${course.id}')"
+             ondragend="handleDragEnd(event)">
+            <span class="course-drag-handle">⋮⋮</span>
+            <div class="course-row-info">
+                <strong>${course.name || 'Untitled'}</strong>
+                <span>${course.level || 'Bachelor'} • ${course.category || 'Other'}</span>
+            </div>
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editItem('course', '${course.id}')">Edit</button>
+                <button class="btn-delete" onclick="deleteItem('courses', '${course.id}')">Delete</button>
+            </div>
+        </div>
+    `;
+}
+
+function toggleFolder(folderId) {
+    const folderEl = document.querySelector(`.folder-item[data-folder-id="${folderId}"]`);
+    if (folderEl) {
+        folderEl.classList.toggle('open');
+    }
+}
+
+// Folder CRUD
+function openFolderModal() {
+    const name = prompt('Enter folder name:');
+    if (name && name.trim()) {
+        createFolder(name.trim());
+    }
+}
+
+async function createFolder(name) {
+    try {
+        const order = courseFolders.length + 1;
+        await db.collection('courseFolders').add({ name, order, createdAt: new Date() });
+        loadCoursesWithFolders();
+    } catch (error) {
+        console.error('Error creating folder:', error);
+        alert('Error creating folder');
+    }
+}
+
+async function renameFolder(folderId, currentName) {
+    const newName = prompt('Rename folder:', currentName);
+    if (newName && newName.trim() && newName !== currentName) {
+        try {
+            await db.collection('courseFolders').doc(folderId).update({ name: newName.trim() });
+            loadCoursesWithFolders();
+        } catch (error) {
+            console.error('Error renaming folder:', error);
+            alert('Error renaming folder');
+        }
+    }
+}
+
+async function deleteFolder(folderId) {
+    if (!confirm('Delete this folder? Courses will be moved to Uncategorized.')) return;
+    
+    try {
+        // Move courses to uncategorized
+        const coursesSnap = await db.collection('courses').where('folderId', '==', folderId).get();
+        const batch = db.batch();
+        coursesSnap.forEach(doc => {
+            batch.update(doc.ref, { folderId: null });
+        });
+        
+        // Delete folder
+        batch.delete(db.collection('courseFolders').doc(folderId));
+        await batch.commit();
+        
+        loadCoursesWithFolders();
+    } catch (error) {
+        console.error('Error deleting folder:', error);
+        alert('Error deleting folder');
+    }
+}
+
+// Drag and Drop
+function setupDragAndDrop() {
+    // Drag and drop is handled via inline event handlers
+}
+
+function handleDragStart(event, courseId) {
+    draggedCourseId = courseId;
+    event.target.classList.add('dragging');
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', courseId);
+}
+
+function handleDragEnd(event) {
+    event.target.classList.remove('dragging');
+    draggedCourseId = null;
+}
+
+function handleDragOver(event, folderId) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    event.currentTarget.classList.add('drag-over');
+}
+
+function handleDragLeave(event) {
+    event.currentTarget.classList.remove('drag-over');
+}
+
+async function handleDrop(event, folderId) {
+    event.preventDefault();
+    event.currentTarget.classList.remove('drag-over');
+    
+    const courseId = event.dataTransfer.getData('text/plain') || draggedCourseId;
+    if (!courseId) return;
+    
+    try {
+        await db.collection('courses').doc(courseId).update({ folderId: folderId });
+        loadCoursesWithFolders();
+    } catch (error) {
+        console.error('Error moving course:', error);
+        alert('Error moving course');
+    }
+}
+
+// Override original loadCourses
+async function loadCourses() {
+    await loadCoursesWithFolders();
+}
+
+// ============================================
+// FOLDER PICKER FOR UNIVERSITY FORM
+// ============================================
+
+function renderFolderPicker() {
+    let html = '<div class="folder-picker" id="folderPickerContainer">';
+    
+    // Group available courses by folder
+    const coursesByFolder = {};
+    const uncategorized = [];
+    
+    availableCourses.forEach(course => {
+        if (course.folderId) {
+            if (!coursesByFolder[course.folderId]) {
+                coursesByFolder[course.folderId] = [];
+            }
+            coursesByFolder[course.folderId].push(course);
+        } else {
+            uncategorized.push(course);
+        }
+    });
+    
+    // Render folders
+    courseFolders.forEach(folder => {
+        const courses = coursesByFolder[folder.id] || [];
+        if (courses.length > 0) {
+            html += renderPickerFolder(folder, courses);
+        }
+    });
+    
+    // Render uncategorized
+    if (uncategorized.length > 0) {
+        html += renderPickerFolder({ id: 'uncategorized', name: 'Uncategorized' }, uncategorized);
+    }
+    
+    html += '</div>';
+    html += '<div class="selected-summary" id="selectedSummary">0 courses selected</div>';
+    
+    return html;
+}
+
+function renderPickerFolder(folder, courses) {
+    const coursesHTML = courses.map(c => {
+        const isSelected = universityCoursesTemp.some(uc => uc.courseId === c.id);
+        return `
+            <div class="picker-course" onclick="togglePickerCourse('${c.id}', '${c.name.replace(/'/g, "\\'")}', '${c.level}')">
+                <input type="checkbox" ${isSelected ? 'checked' : ''} data-course-id="${c.id}">
+                <div class="picker-course-info">
+                    <strong>${c.name}</strong>
+                    <span>${c.level} • ${c.category || 'Other'}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    const allSelected = courses.every(c => universityCoursesTemp.some(uc => uc.courseId === c.id));
+    const someSelected = courses.some(c => universityCoursesTemp.some(uc => uc.courseId === c.id));
+    
+    return `
+        <div class="picker-folder" data-picker-folder="${folder.id}">
+            <div class="picker-folder-header" onclick="togglePickerFolder('${folder.id}')">
+                <input type="checkbox" 
+                       ${allSelected ? 'checked' : ''} 
+                       ${someSelected && !allSelected ? 'class="indeterminate"' : ''}
+                       onclick="event.stopPropagation(); toggleFolderSelection('${folder.id}')"
+                       data-folder-checkbox="${folder.id}">
+                <span class="picker-folder-toggle">▶</span>
+                <span class="picker-folder-name">${folder.name}</span>
+                <span class="picker-folder-count">${courses.length} courses</span>
+            </div>
+            <div class="picker-courses">
+                ${coursesHTML}
+            </div>
+        </div>
+    `;
+}
+
+function togglePickerFolder(folderId) {
+    const el = document.querySelector(`.picker-folder[data-picker-folder="${folderId}"]`);
+    if (el) el.classList.toggle('open');
+}
+
+function toggleFolderSelection(folderId) {
+    const checkbox = document.querySelector(`[data-folder-checkbox="${folderId}"]`);
+    const shouldSelect = checkbox.checked;
+    
+    // Get courses in this folder
+    const folderCourses = folderId === 'uncategorized' 
+        ? availableCourses.filter(c => !c.folderId)
+        : availableCourses.filter(c => c.folderId === folderId);
+    
+    folderCourses.forEach(course => {
+        const idx = universityCoursesTemp.findIndex(uc => uc.courseId === course.id);
+        if (shouldSelect && idx === -1) {
+            universityCoursesTemp.push({
+                courseId: course.id,
+                courseName: course.name,
+                level: course.level,
+                fees: '',
+                category: course.category || 'Other'
+            });
+        } else if (!shouldSelect && idx !== -1) {
+            universityCoursesTemp.splice(idx, 1);
+        }
+    });
+    
+    refreshFolderPicker();
+}
+
+function togglePickerCourse(courseId, courseName, level) {
+    const idx = universityCoursesTemp.findIndex(uc => uc.courseId === courseId);
+    
+    if (idx !== -1) {
+        universityCoursesTemp.splice(idx, 1);
+    } else {
+        const course = availableCourses.find(c => c.id === courseId);
+        universityCoursesTemp.push({
+            courseId: courseId,
+            courseName: courseName,
+            level: level,
+            fees: '',
+            category: course?.category || 'Other'
+        });
+    }
+    
+    refreshFolderPicker();
+}
+
+function refreshFolderPicker() {
+    const container = document.querySelector('.course-picker');
+    if (container) {
+        container.innerHTML = renderFolderPicker();
+        updateSelectedSummary();
+        // Re-apply indeterminate states
+        setIndeterminateStates();
+    }
+}
+
+function updateSelectedSummary() {
+    const summaryEl = document.getElementById('selectedSummary');
+    if (summaryEl) {
+        summaryEl.textContent = `${universityCoursesTemp.length} courses selected`;
+    }
+}
+
+function setIndeterminateStates() {
+    courseFolders.concat([{ id: 'uncategorized' }]).forEach(folder => {
+        const folderCourses = folder.id === 'uncategorized'
+            ? availableCourses.filter(c => !c.folderId)
+            : availableCourses.filter(c => c.folderId === folder.id);
+        
+        if (folderCourses.length === 0) return;
+        
+        const selectedCount = folderCourses.filter(c => 
+            universityCoursesTemp.some(uc => uc.courseId === c.id)
+        ).length;
+        
+        const checkbox = document.querySelector(`[data-folder-checkbox="${folder.id}"]`);
+        if (checkbox) {
+            checkbox.indeterminate = selectedCount > 0 && selectedCount < folderCourses.length;
+        }
+    });
+}
+
+// Load folders when loading available courses
+const originalLoadAvailableCourses = loadAvailableCourses;
+loadAvailableCourses = async function() {
+    await originalLoadAvailableCourses.call(this);
+    
+    // Also load folders
+    try {
+        const foldersSnap = await db.collection('courseFolders').orderBy('order', 'asc').get();
+        courseFolders = [];
+        foldersSnap.forEach(doc => {
+            courseFolders.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Add folderId to available courses
+        const coursesSnap = await db.collection('courses').get();
+        coursesSnap.forEach(doc => {
+            const course = availableCourses.find(c => c.id === doc.id);
+            if (course) {
+                course.folderId = doc.data().folderId || null;
+            }
+        });
+    } catch (error) {
+        console.error('Error loading folders:', error);
+    }
+};
