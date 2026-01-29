@@ -149,6 +149,137 @@
             .uni-page-grid {
                 grid-template-columns: 1fr;
             }
+            .search-filter-bar {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .search-filter-bar .filter-group {
+                width: 100%;
+            }
+        }
+        
+        /* Modern Search & Filter Bar */
+        .search-filter-bar {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+            margin-bottom: 32px;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        .filter-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            color: #1e293b;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(179, 37, 52, 0.1);
+        }
+        
+        .filter-group input::placeholder {
+            color: #94a3b8;
+        }
+        
+        .search-input-wrapper {
+            position: relative;
+            flex: 2;
+            min-width: 250px;
+        }
+        
+        .search-input-wrapper input {
+            padding-left: 44px;
+        }
+        
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #94a3b8;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .filter-btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        .filter-btn-primary:hover {
+            background: #9a1f2e;
+            transform: translateY(-1px);
+        }
+        
+        .filter-btn-reset {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .filter-btn-reset:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .no-results h3 {
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        
+        .no-results p {
+            color: #64748b;
         }
     </style>
 </head>
@@ -193,6 +324,43 @@
     <!-- Universities Grid Section -->
     <section class="section" style="background: var(--gray-50); padding-top: 40px;">
         <div class="container">
+            <!-- Search & Filter Bar -->
+            <div class="search-filter-bar">
+                <div class="filter-group search-input-wrapper">
+                    <label>Search</label>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search by university name...">
+                </div>
+                <div class="filter-group">
+                    <label>Level</label>
+                    <select id="filterLevel">
+                        <option value="">All Levels</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Location</label>
+                    <select id="filterLocation">
+                        <option value="">All Locations</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Fee Range</label>
+                    <select id="filterFee">
+                        <option value="">All Fees</option>
+                        <option value="0-10000">Under RM 10,000</option>
+                        <option value="10000-30000">RM 10,000 - 30,000</option>
+                        <option value="30000-50000">RM 30,000 - 50,000</option>
+                        <option value="50000+">Above RM 50,000</option>
+                    </select>
+                </div>
+                <div class="filter-buttons">
+                    <button type="button" class="filter-btn filter-btn-primary" onclick="applyFilters()">Apply</button>
+                    <button type="button" class="filter-btn filter-btn-reset" onclick="resetFilters()">Reset</button>
+                </div>
+            </div>
+            
             <div class="uni-page-grid" id="universitiesGrid">
                 <div class="loading-state">
                     <p>Loading universities...</p>
@@ -237,12 +405,147 @@
         // Location icon SVG
         const locationIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`;
         
+        // Store all universities for filtering
+        let allUniversities = [];
+        
+        // Helper to fix asset paths
+        const fixPath = (path) => {
+            if (!path) return null;
+            if (path.startsWith('../') || path.startsWith('http')) return path;
+            return '../' + path;
+        };
+        
+        // Render universities grid
+        function renderUniversities(universities) {
+            const grid = document.getElementById('universitiesGrid');
+            
+            if (universities.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <h3>No universities found</h3>
+                        <p>Try adjusting your search or filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const html = universities.map(uni => `
+                <a href="university-detail.html?id=${uni.id}" class="uni-page-card">
+                    <div class="uni-cover-wrapper">
+                        ${uni.image 
+                            ? `<img src="${fixPath(uni.image)}" alt="${uni.name}" class="uni-cover-image">`
+                            : `<div class="uni-cover-image"></div>`
+                        }
+                        <div class="uni-page-logo">
+                            ${uni.logo 
+                                ? `<img src="${fixPath(uni.logo)}" alt="${uni.name}">`
+                                : `<span>${uni.shortCode || uni.name.substring(0, 3).toUpperCase()}</span>`
+                            }
+                        </div>
+                    </div>
+                    <div class="uni-page-content">
+                        <h3>${uni.name}${uni.shortCode ? ` (${uni.shortCode})` : ''}</h3>
+                        <p class="uni-location">
+                            ${locationIcon}
+                            ${uni.location || 'Malaysia'}
+                        </p>
+                    </div>
+                    <div class="uni-page-footer">
+                        <span class="uni-qs-label">World Ranking</span>
+                        <span class="uni-qs-rank">
+                            ${globeIcon}
+                            QS #${uni.ranking || 'N/A'}
+                        </span>
+                    </div>
+                </a>
+            `).join('');
+            
+            grid.innerHTML = html;
+        }
+        
+        // Populate filter dropdowns with unique values
+        function populateFilters(universities) {
+            const levels = [...new Set(universities.map(u => u.level).filter(Boolean))];
+            const locations = [...new Set(universities.map(u => u.location).filter(Boolean))];
+            
+            const levelSelect = document.getElementById('filterLevel');
+            const locationSelect = document.getElementById('filterLocation');
+            
+            levels.forEach(level => {
+                const option = document.createElement('option');
+                option.value = level;
+                option.textContent = level;
+                levelSelect.appendChild(option);
+            });
+            
+            locations.forEach(location => {
+                const option = document.createElement('option');
+                option.value = location;
+                option.textContent = location;
+                locationSelect.appendChild(option);
+            });
+        }
+        
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const levelFilter = document.getElementById('filterLevel').value;
+            const locationFilter = document.getElementById('filterLocation').value;
+            const feeFilter = document.getElementById('filterFee').value;
+            
+            let filtered = allUniversities;
+            
+            // Search filter
+            if (searchTerm) {
+                filtered = filtered.filter(uni => 
+                    uni.name.toLowerCase().includes(searchTerm) ||
+                    (uni.shortCode && uni.shortCode.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Level filter
+            if (levelFilter) {
+                filtered = filtered.filter(uni => uni.level === levelFilter);
+            }
+            
+            // Location filter
+            if (locationFilter) {
+                filtered = filtered.filter(uni => uni.location === locationFilter);
+            }
+            
+            // Fee filter
+            if (feeFilter) {
+                filtered = filtered.filter(uni => {
+                    const fee = parseInt(uni.fee) || 0;
+                    switch (feeFilter) {
+                        case '0-10000': return fee < 10000;
+                        case '10000-30000': return fee >= 10000 && fee < 30000;
+                        case '30000-50000': return fee >= 30000 && fee < 50000;
+                        case '50000+': return fee >= 50000;
+                        default: return true;
+                    }
+                });
+            }
+            
+            renderUniversities(filtered);
+        }
+        
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterLevel').value = '';
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('filterFee').value = '';
+            renderUniversities(allUniversities);
+        }
+        
         // Load universities from Firestore
         async function loadUniversities() {
             const grid = document.getElementById('universitiesGrid');
             
             try {
                 const universities = await getUniversities();
+                allUniversities = universities;
                 
                 if (universities.length === 0) {
                     grid.innerHTML = `
@@ -253,45 +556,11 @@
                     return;
                 }
                 
-                // Helper to fix asset paths (add ../ for pages in subdirectory)
-                const fixPath = (path) => {
-                    if (!path) return null;
-                    if (path.startsWith('../') || path.startsWith('http')) return path;
-                    return '../' + path;
-                };
+                // Populate filter dropdowns
+                populateFilters(universities);
                 
-                const html = universities.map(uni => `
-                    <a href="university-detail.html?id=${uni.id}" class="uni-page-card">
-                        <div class="uni-cover-wrapper">
-                            ${uni.image 
-                                ? `<img src="${fixPath(uni.image)}" alt="${uni.name}" class="uni-cover-image">`
-                                : `<div class="uni-cover-image"></div>`
-                            }
-                            <div class="uni-page-logo">
-                                ${uni.logo 
-                                    ? `<img src="${fixPath(uni.logo)}" alt="${uni.name}">`
-                                    : `<span>${uni.shortCode || uni.name.substring(0, 3).toUpperCase()}</span>`
-                                }
-                            </div>
-                        </div>
-                        <div class="uni-page-content">
-                            <h3>${uni.name}${uni.shortCode ? ` (${uni.shortCode})` : ''}</h3>
-                            <p class="uni-location">
-                                ${locationIcon}
-                                ${uni.location || 'Malaysia'}
-                            </p>
-                        </div>
-                        <div class="uni-page-footer">
-                            <span class="uni-qs-label">World Ranking</span>
-                            <span class="uni-qs-rank">
-                                ${globeIcon}
-                                QS #${uni.ranking || 'N/A'}
-                            </span>
-                        </div>
-                    </a>
-                `).join('');
-                
-                grid.innerHTML = html;
+                // Render all universities
+                renderUniversities(universities);
                 
             } catch (error) {
                 console.error('Error loading universities:', error);
@@ -303,9 +572,16 @@
             }
         }
         
-        // Load when Firebase is ready
+        // Real-time search on Enter key
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(loadUniversities, 500);
+            
+            // Listen for Enter key on search input
+            document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
         });
     </script>
 </body>
