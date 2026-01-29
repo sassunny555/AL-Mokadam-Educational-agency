@@ -13,9 +13,65 @@
            University Detail Page - Enhanced Styles
            ============================================ */
         
+        /* Breadcrumb for Detail Page */
+        .breadcrumb-detail {
+            padding: 100px 0 16px;
+            background: var(--gray-50);
+        }
+        
+        .breadcrumb-list-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8125rem;
+        }
+        
+        .breadcrumb-list-detail a {
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .breadcrumb-list-detail a:hover {
+            color: var(--primary);
+        }
+        
+        .breadcrumb-sep-detail {
+            color: var(--gray-400);
+        }
+        
+        .breadcrumb-active-detail {
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+        
+        /* Dark mode breadcrumb */
+        [data-theme="dark"] .breadcrumb-detail {
+            background: #1E293B;
+        }
+        
+        [data-theme="dark"] .breadcrumb-list-detail a {
+            color: #94A3B8;
+        }
+        
+        [data-theme="dark"] .breadcrumb-list-detail a:hover {
+            color: #EF4444;
+        }
+        
+        [data-theme="dark"] .breadcrumb-sep-detail {
+            color: #64748B;
+        }
+        
+        [data-theme="dark"] .breadcrumb-active-detail {
+            color: #F1F5F9;
+        }
+        
         /* Header */
         .uni-header {
-            padding: 140px 0 40px;
+            padding: 40px 0 40px;
             background: #FEF2F2;
         }
         
@@ -550,6 +606,9 @@
                 <li><a href="../index.html#testimonials">Success Stories</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
             <div class="nav-cta">
                 <a href="contact.html" class="btn btn-primary">Get Started</a>
             </div>
@@ -558,6 +617,19 @@
                 <span></span>
                 <span></span>
             </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb-detail" aria-label="Breadcrumb">
+        <div class="container">
+            <ol class="breadcrumb-list-detail">
+                <li><a href="../index.html">Home</a></li>
+                <li class="breadcrumb-sep-detail">›</li>
+                <li><a href="universities.html">Universities</a></li>
+                <li class="breadcrumb-sep-detail">›</li>
+                <li class="breadcrumb-active-detail" id="breadcrumbUniName">Loading...</li>
+            </ol>
         </div>
     </nav>
 
@@ -816,6 +888,9 @@
                 document.getElementById('headerContent').style.display = 'flex';
                 document.getElementById('headerLoading').style.display = 'none';
                 document.title = `${uni.name} | AL-Mokadam`;
+                
+                // Update breadcrumb
+                document.getElementById('breadcrumbUniName').textContent = uni.shortCode || uni.name;
 
                 // Overview
                 document.getElementById('studyAtTitle').textContent = `Study at ${uni.name}`;
@@ -934,5 +1009,6 @@
             setTimeout(loadUniversity, 500);
         });
     </script>
+    <script src="../js/dark-mode.js"></script>
 </body>
 </html>

@@ -9,6 +9,133 @@
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="../css/styles.css">
     <style>
+        /* Hero Header with Background Image */
+        .uni-hero-header {
+            position: relative;
+            height: 320px;
+            background-image: url('../assets/universities/University page/university-top header.jpg');
+            background-size: 100% auto;
+            background-position: right center;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            padding-top: 60px;
+        }
+        
+        .uni-hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(30, 64, 120, 0.92) 0%, rgba(30, 64, 120, 0.7) 40%, rgba(30, 64, 120, 0.3) 70%, transparent 100%);
+        }
+        
+        .uni-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 550px;
+            text-align: left;
+            margin-top: -30px;
+        }
+        
+        .uni-hero-header h1 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            text-align: left;
+        }
+        
+        .uni-hero-header p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin: 0;
+            text-align: left;
+        }
+        
+        .uni-hero-header .container {
+            width: 100%;
+        }
+        
+        /* Breadcrumb in Hero */
+        .breadcrumb-hero {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+        }
+        
+        .breadcrumb-list-hero {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8125rem;
+        }
+        
+        .breadcrumb-list-hero a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .breadcrumb-list-hero a:hover {
+            color: #ffffff;
+        }
+        
+        .breadcrumb-separator-hero {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .breadcrumb-current-hero {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        
+        /* Typing Animation */
+        .typing-text {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid rgba(255, 255, 255, 0.8);
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        
+        .typing-text.done {
+            border-right: none;
+            animation: none;
+        }
+        
+        .typing-subtitle {
+            opacity: 0;
+            white-space: normal;
+        }
+        
+        .typing-subtitle.visible {
+            opacity: 1;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: rgba(255, 255, 255, 0.8); }
+            50% { border-color: transparent; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         /* Universities Page - Cover Image Card Design */
         .uni-page-grid {
             display: grid;
@@ -102,6 +229,26 @@
             flex-shrink: 0;
         }
         
+        .uni-courses-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        
+        .uni-courses-count svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+        
+        .uni-courses-count strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
         .uni-page-footer {
             padding: 12px 20px;
             border-top: 1px solid #e2e8f0;
@@ -158,17 +305,23 @@
             }
         }
         
-        /* Modern Search & Filter Bar */
+        /* Modern Search & Filter Bar - Overlapping Header */
+        .search-bar-wrapper {
+            position: relative;
+            margin-top: -60px;
+            z-index: 10;
+            margin-bottom: 40px;
+        }
+        
         .search-filter-bar {
             background: var(--white);
-            border-radius: 16px;
-            padding: 20px 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
             align-items: flex-end;
-            margin-bottom: 32px;
         }
         
         .filter-group {
@@ -189,13 +342,24 @@
         .filter-group input,
         .filter-group select {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 20px;
             border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 50px;
             font-size: 0.9375rem;
             color: #1e293b;
             background: #f8fafc;
             transition: all 0.2s ease;
+        }
+        
+        .filter-group select {
+            padding-right: 50px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 20px) center;
+            cursor: pointer;
         }
         
         .filter-group input:focus,
@@ -217,17 +381,17 @@
         }
         
         .search-input-wrapper input {
-            padding-left: 44px;
+            padding-left: 48px;
         }
         
         .search-input-wrapper svg {
             position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
+            left: 18px;
+            bottom: 14px;
             width: 18px;
             height: 18px;
             color: #94a3b8;
+            pointer-events: none;
         }
         
         .filter-buttons {
@@ -236,8 +400,8 @@
         }
         
         .filter-btn {
-            padding: 12px 24px;
-            border-radius: 10px;
+            padding: 12px 28px;
+            border-radius: 50px;
             font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
@@ -300,6 +464,10 @@
                 <li><a href="contact.html">Contact</a></li>
             </ul>
             
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            
             <div class="nav-cta">
                 <a href="contact.html" class="btn btn-primary">Get Started</a>
             </div>
@@ -312,52 +480,63 @@
         </div>
     </nav>
 
-    <!-- Page Header - Compact -->
-    <section class="page-header" style="padding: 100px 0 40px;">
-        <div class="container" style="text-align: center;">
-            <span class="subtitle" style="margin-bottom: 8px;">Our Partners</span>
-            <h1 style="font-size: 2rem; margin-bottom: 8px;">Malaysian Universities</h1>
-            <p style="font-size: 1rem; margin: 0; opacity: 0.9;">Explore top universities and find the perfect match for your education goals.</p>
+    <!-- Hero Header with Background Image -->
+    <section class="uni-hero-header">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb-hero" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list-hero">
+                    <li><a href="../index.html">Home</a></li>
+                    <li class="breadcrumb-separator-hero">›</li>
+                    <li class="breadcrumb-current-hero">Universities</li>
+                </ol>
+            </nav>
+            <div class="uni-hero-content">
+                <h1 id="heroTitle" class="typing-text"></h1>
+                <p id="heroSubtitle" class="typing-subtitle"></p>
+            </div>
         </div>
     </section>
 
     <!-- Universities Grid Section -->
-    <section class="section" style="background: var(--gray-50); padding-top: 40px;">
+    <section class="section" style="background: var(--gray-50); padding-top: 0;">
         <div class="container">
-            <!-- Search & Filter Bar -->
-            <div class="search-filter-bar">
-                <div class="filter-group search-input-wrapper">
-                    <label>Search</label>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    <input type="text" id="searchInput" placeholder="Search by university name...">
-                </div>
-                <div class="filter-group">
-                    <label>Level</label>
-                    <select id="filterLevel">
-                        <option value="">All Levels</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Location</label>
-                    <select id="filterLocation">
-                        <option value="">All Locations</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Fee Range</label>
-                    <select id="filterFee">
-                        <option value="">All Fees</option>
-                        <option value="0-10000">Under RM 10,000</option>
-                        <option value="10000-30000">RM 10,000 - 30,000</option>
-                        <option value="30000-50000">RM 30,000 - 50,000</option>
-                        <option value="50000+">Above RM 50,000</option>
-                    </select>
-                </div>
-                <div class="filter-buttons">
-                    <button type="button" class="filter-btn filter-btn-primary" onclick="applyFilters()">Apply</button>
-                    <button type="button" class="filter-btn filter-btn-reset" onclick="resetFilters()">Reset</button>
+            <!-- Search & Filter Bar (Overlapping Header) -->
+            <div class="search-bar-wrapper">
+                <div class="search-filter-bar">
+                    <div class="filter-group search-input-wrapper">
+                        <label>Search</label>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search by university name...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Level</label>
+                        <select id="filterLevel">
+                            <option value="">All Levels</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Location</label>
+                        <select id="filterLocation">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Fee Range</label>
+                        <select id="filterFee">
+                            <option value="">All Fees</option>
+                            <option value="0-10000">Under RM 10,000</option>
+                            <option value="10000-30000">RM 10,000 - 30,000</option>
+                            <option value="30000-50000">RM 30,000 - 50,000</option>
+                            <option value="50000+">Above RM 50,000</option>
+                        </select>
+                    </div>
+                    <div class="filter-buttons">
+                        <button type="button" class="filter-btn filter-btn-primary" onclick="applyFilters()">Apply</button>
+                        <button type="button" class="filter-btn filter-btn-reset" onclick="resetFilters()">Reset</button>
+                    </div>
                 </div>
             </div>
             
@@ -399,11 +578,48 @@
     <script src="../js/main.js"></script>
     
     <script>
+        // Typing Animation
+        function typeWriter(element, text, speed, callback) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+        
+        // Initialize typing animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleEl = document.getElementById('heroTitle');
+            const subtitleEl = document.getElementById('heroSubtitle');
+            
+            const titleText = 'Malaysian Universities';
+            const subtitleText = 'Explore top universities and find the perfect match for your education goals.';
+            
+            // Start typing the title
+            setTimeout(() => {
+                typeWriter(titleEl, titleText, 80, function() {
+                    // When title is done, remove cursor and show subtitle
+                    titleEl.classList.add('done');
+                    subtitleEl.textContent = subtitleText;
+                    subtitleEl.classList.add('visible');
+                });
+            }, 300);
+        });
+        
         // Globe icon SVG
         const globeIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
         
         // Location icon SVG
         const locationIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`;
+        
+        // Book icon SVG for courses
+        const bookIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`;
         
         // Store all universities for filtering
         let allUniversities = [];
@@ -448,6 +664,10 @@
                         <p class="uni-location">
                             ${locationIcon}
                             ${uni.location || 'Malaysia'}
+                        </p>
+                        <p class="uni-courses-count">
+                            ${bookIcon}
+                            <strong>${uni.courseOfferings ? uni.courseOfferings.length : 0}</strong> Courses Offered
                         </p>
                     </div>
                     <div class="uni-page-footer">
@@ -584,5 +804,6 @@
             });
         });
     </script>
+    <script src="../js/dark-mode.js"></script>
 </body>
 </html>

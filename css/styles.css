@@ -70,6 +70,37 @@
     --transition-slow: 0.5s ease;
 }
 
+/* ---------- Dark Mode Variables ---------- */
+[data-theme="dark"] {
+    /* Primary Colors - Keep accent color */
+    --primary: #EF4444;
+    --primary-dark: #DC2626;
+    --primary-light: #7F1D1D;
+    
+    /* Secondary Colors */
+    --navy: #F1F5F9;
+    --navy-light: #E2E8F0;
+    
+    /* Neutral Colors - Inverted */
+    --white: #0F172A;
+    --gray-50: #1E293B;
+    --gray-100: #1E293B;
+    --gray-200: #334155;
+    --gray-300: #475569;
+    --gray-400: #64748B;
+    --gray-500: #94A3B8;
+    --gray-600: #CBD5E1;
+    --gray-700: #E2E8F0;
+    --gray-800: #F1F5F9;
+    --gray-900: #F8FAFC;
+    
+    /* Shadows for dark mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
 /* ---------- Reset & Base ---------- */
 *, *::before, *::after {
     margin: 0;
@@ -298,6 +329,511 @@ ul { list-style: none; }
 }
 
 .navbar.scrolled .nav-toggle span { background: var(--navy); }
+
+/* ---------- Theme Toggle Button ---------- */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--white);
+    transition: all var(--transition-normal);
+    margin-left: 8px;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.navbar.scrolled .theme-toggle {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.navbar.scrolled .theme-toggle:hover {
+    background: var(--gray-200);
+}
+
+[data-theme="dark"] .theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .navbar.scrolled .theme-toggle {
+    background: var(--gray-100);
+    color: #fbbf24;
+}
+
+/* ---------- Dark Mode Overrides ---------- */
+
+/* Navbar Logo - Keep white text on transparent navbar, light text on scrolled */
+[data-theme="dark"] .nav-logo span {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .navbar.scrolled .nav-logo span {
+    color: #F1F5F9;
+}
+
+/* Navigation Links - Keep white on transparent, light on scrolled */
+[data-theme="dark"] .nav-links a {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .navbar.scrolled .nav-links a {
+    color: #CBD5E1;
+}
+
+[data-theme="dark"] .navbar.scrolled .nav-links a:hover {
+    color: #EF4444;
+}
+
+/* Scrolled navbar background in dark mode */
+[data-theme="dark"] .navbar.scrolled {
+    background: #0F172A;
+}
+
+/* Hero Section - Keep all text white on gradient background */
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .hero h2,
+[data-theme="dark"] .hero h3 {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .hero p,
+[data-theme="dark"] .hero-description {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="dark"] .hero .btn-white {
+    background: #FFFFFF;
+    color: #0F172A;
+}
+
+[data-theme="dark"] .hero .btn-white:hover {
+    background: #F1F5F9;
+}
+
+[data-theme="dark"] .hero .btn-outline-white {
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .hero .btn-outline-white:hover {
+    background: #FFFFFF;
+    color: #0F172A;
+}
+
+/* Ensure text on red/primary backgrounds is ALWAYS white */
+[data-theme="dark"] .btn-primary {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-white {
+    background: #1E293B;
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .btn-white:hover {
+    background: #334155;
+}
+
+/* Footer - Keep dark background in dark mode */
+[data-theme="dark"] .footer {
+    background: #0F172A;
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .footer-logo span {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .footer-links h4 {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .footer-links a:hover,
+[data-theme="dark"] .footer-bottom-links a:hover {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .footer-bottom {
+    border-top-color: #334155;
+}
+
+/* CTA Section - Keep navy background in dark mode */
+[data-theme="dark"] .cta {
+    background: #1E293B;
+}
+
+[data-theme="dark"] .cta h2 {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cta p {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Form inputs - Ensure visible text color */
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group select {
+    background: #1E293B;
+    color: #F1F5F9;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .form-group input::placeholder,
+[data-theme="dark"] .form-group textarea::placeholder {
+    color: #64748B;
+}
+
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group textarea:focus,
+[data-theme="dark"] .form-group select:focus {
+    border-color: #EF4444;
+    background: #0F172A;
+}
+
+[data-theme="dark"] .form-group label {
+    color: #E2E8F0;
+}
+
+/* Page Header - Keep primary background and white text */
+[data-theme="dark"] .page-header {
+    background: var(--primary);
+}
+
+[data-theme="dark"] .page-header h1 {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .page-header p {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="dark"] .page-header .subtitle {
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Cards - Ensure proper contrast */
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .uni-card,
+[data-theme="dark"] .course-card,
+[data-theme="dark"] .team-card,
+[data-theme="dark"] .testimonial-card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .service-card:hover,
+[data-theme="dark"] .uni-card:hover,
+[data-theme="dark"] .course-card:hover {
+    border-color: #EF4444;
+}
+
+/* Contact Info Item Icons */
+[data-theme="dark"] .contact-item-icon,
+[data-theme="dark"] .service-icon,
+[data-theme="dark"] .course-icon,
+[data-theme="dark"] .why-feature-icon {
+    background: #7F1D1D;
+}
+
+/* University cards specific */
+[data-theme="dark"] .uni-card h4,
+[data-theme="dark"] .service-card h3,
+[data-theme="dark"] .course-card h3,
+[data-theme="dark"] .course-card h4,
+[data-theme="dark"] .team-card h4 {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .uni-ranking-badge {
+    background: #334155;
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .uni-card-footer {
+    border-top-color: #475569;
+}
+
+[data-theme="dark"] .uni-qs-rank {
+    color: #F1F5F9;
+}
+
+/* Team Social Links */
+[data-theme="dark"] .team-social a {
+    background: #334155;
+    color: #CBD5E1;
+}
+
+[data-theme="dark"] .team-social a:hover {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+
+/* Hero on non-index pages */
+[data-theme="dark"] .hero h1 {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .hero-description {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Why Malaysia Section list items */
+[data-theme="dark"] .why-item-icon {
+    background: #7F1D1D;
+}
+
+[data-theme="dark"] .why-item-content h4 {
+    color: #F1F5F9;
+}
+
+/* Universities page search bar */
+[data-theme="dark"] .search-filter-bar {
+    background: #1E293B;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .filter-group input,
+[data-theme="dark"] .filter-group select {
+    background: #0F172A;
+    color: #F1F5F9;
+    border-color: #475569;
+}
+
+/* Dropdown arrow - light color for dark mode */
+[data-theme="dark"] .filter-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23CBD5E1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 20px) center;
+}
+
+[data-theme="dark"] .filter-group input::placeholder {
+    color: #64748B;
+}
+
+[data-theme="dark"] .filter-group label {
+    color: #CBD5E1;
+}
+
+[data-theme="dark"] .filter-btn-reset {
+    color: #CBD5E1;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .filter-btn-reset:hover {
+    background: #334155;
+    color: #F1F5F9;
+}
+
+/* University page cards */
+[data-theme="dark"] .uni-page-card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .uni-page-card:hover {
+    border-color: #EF4444;
+}
+
+[data-theme="dark"] .uni-page-content h3 {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .uni-courses-count {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .uni-courses-count strong {
+    color: #EF4444;
+}
+
+[data-theme="dark"] .uni-page-footer {
+    background: #0F172A;
+    border-top-color: #334155;
+}
+
+[data-theme="dark"] .uni-page-logo {
+    background: #0F172A;
+    border-color: #1E293B;
+}
+
+/* Courses page cards */
+[data-theme="dark"] .course-page-card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .course-page-icon {
+    background: #7F1D1D;
+}
+
+[data-theme="dark"] .course-detail-item {
+    color: #CBD5E1;
+}
+
+[data-theme="dark"] .course-programs span {
+    background: #0F172A;
+    color: #CBD5E1;
+}
+
+/* Services page */
+[data-theme="dark"] .service-detail-card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .service-detail-icon {
+    background: #7F1D1D;
+}
+
+[data-theme="dark"] .service-detail-content h2 {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .service-features li {
+    color: #CBD5E1;
+}
+
+/* Contact page */
+[data-theme="dark"] .contact-form {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .contact-form h3 {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .contact-social h4 {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .social-links a {
+    background: #334155;
+    color: #CBD5E1;
+}
+
+[data-theme="dark"] .social-links a:hover {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+
+/* University detail page */
+[data-theme="dark"] .uni-header {
+    background: #1E293B;
+}
+
+[data-theme="dark"] .uni-header-info h1 {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .uni-logo-large {
+    background: #0F172A;
+}
+
+[data-theme="dark"] .uni-tabs {
+    background: #0F172A;
+    border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .tab-btn {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .tab-btn:hover,
+[data-theme="dark"] .tab-btn.active {
+    color: #F1F5F9;
+    border-bottom-color: #EF4444;
+}
+
+[data-theme="dark"] .overview-intro h2,
+[data-theme="dark"] .about-section h3,
+[data-theme="dark"] .faq-section h2,
+[data-theme="dark"] .courses-section h2 {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .countdown-section {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .countdown-section h3 {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .countdown-box {
+    background: #0F172A;
+}
+
+[data-theme="dark"] .countdown-box .number {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .quick-info {
+    background: #1E293B;
+}
+
+[data-theme="dark"] .info-badge .value {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .course-category {
+    border-color: #334155;
+}
+
+[data-theme="dark"] .category-header {
+    background: #1E293B;
+}
+
+[data-theme="dark"] .category-header:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .category-header h4 {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .course-table th {
+    background: #1E293B;
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .course-table td {
+    border-bottom-color: #334155;
+    color: #CBD5E1;
+}
+
+[data-theme="dark"] .course-table .fees {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .faq-question {
+    color: #F1F5F9;
+}
+
+[data-theme="dark"] .faq-question:hover {
+    color: #EF4444;
+}
+
+[data-theme="dark"] .faq-item {
+    border-bottom-color: #334155;
+}
 
 /* ---------- Hero Section - Compact Style ---------- */
 .hero {
@@ -1025,3 +1561,92 @@ ul { list-style: none; }
 
 .page-header h1 { color: var(--white); margin-bottom: var(--space-md); }
 .page-header p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.9); max-width: 600px; margin: 0 auto; }
+
+/* ---------- Breadcrumb Navigation ---------- */
+.breadcrumb {
+    padding: 100px 0 16px;
+    background: var(--gray-50);
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+}
+
+.breadcrumb-list a {
+    color: var(--gray-500);
+    transition: color var(--transition-fast);
+}
+
+.breadcrumb-list a:hover {
+    color: var(--primary);
+}
+
+.breadcrumb-separator {
+    color: var(--gray-400);
+    font-size: 0.75rem;
+}
+
+.breadcrumb-current {
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+/* Dark mode breadcrumb */
+[data-theme="dark"] .breadcrumb {
+    background: var(--gray-50);
+}
+
+[data-theme="dark"] .breadcrumb-list a {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .breadcrumb-list a:hover {
+    color: #EF4444;
+}
+
+[data-theme="dark"] .breadcrumb-separator {
+    color: #64748B;
+}
+
+[data-theme="dark"] .breadcrumb-current {
+    color: #F1F5F9;
+}
+
+/* Breadcrumb on Page Headers (red background) */
+.breadcrumb-header {
+    margin-bottom: 20px;
+}
+
+.breadcrumb-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.8125rem;
+}
+
+.breadcrumb-list-header a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-list-header a:hover {
+    color: #ffffff;
+}
+
+.breadcrumb-sep {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb-active {
+    color: #ffffff;
+    font-weight: 500;
+}

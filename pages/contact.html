@@ -29,6 +29,10 @@
                 <li><a href="contact.html" class="active">Contact</a></li>
             </ul>
             
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            
             <div class="nav-cta">
                 <a href="contact.html" class="btn btn-primary">Get Started</a>
             </div>
@@ -44,6 +48,14 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb-header" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list-header">
+                    <li><a href="../index.html">Home</a></li>
+                    <li class="breadcrumb-sep">›</li>
+                    <li class="breadcrumb-active">Contact</li>
+                </ol>
+            </nav>
             <span class="subtitle">Get In Touch</span>
             <h1>Contact Us</h1>
             <p>Have questions? Reach out to us and our team will get back to you within 24 hours.</p>
@@ -211,6 +223,7 @@
         </div>
     </footer>
 
+    <script src="../js/dark-mode.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/firebase-config.js"></script>
 </body>
