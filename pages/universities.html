@@ -20,6 +20,7 @@
             align-items: center;
             margin-bottom: 0;
             padding-top: 60px;
+            padding-bottom: 80px;
         }
         
         .uni-hero-header::before {
@@ -35,9 +36,9 @@
         .uni-hero-content {
             position: relative;
             z-index: 1;
-            max-width: 550px;
+            max-width: 800px;
             text-align: left;
-            margin-top: -30px;
+            margin-top: 0;
         }
         
         .uni-hero-header h1 {
@@ -65,7 +66,7 @@
         .breadcrumb-hero {
             position: relative;
             z-index: 1;
-            margin-bottom: 12px;
+            margin-bottom: 24px;
         }
         
         .breadcrumb-list-hero {
@@ -493,7 +494,7 @@
             </nav>
             <div class="uni-hero-content">
                 <h1 id="heroTitle" class="typing-text"></h1>
-                <p id="heroSubtitle" class="typing-subtitle"></p>
+                <p id="heroSubtitle" class="typing-subtitle">Explore top universities and find the perfect match for your education goals.</p>
             </div>
         </div>
     </section>
@@ -606,7 +607,7 @@
                 typeWriter(titleEl, titleText, 80, function() {
                     // When title is done, remove cursor and show subtitle
                     titleEl.classList.add('done');
-                    subtitleEl.textContent = subtitleText;
+                    // Text is already in HTML to prevent layout jump
                     subtitleEl.classList.add('visible');
                 });
             }, 300);
