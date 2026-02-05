@@ -4,6 +4,54 @@
 
 let selectedUniversity = null;
 let currentStep = 1;
+const PROGRAM_ORDER = ['Bachelor', 'Foundation', 'Diploma', 'Masters', 'Other'];
+
+function normalizeLevel(level) {
+    if (!level) return 'Other';
+    const val = level.toLowerCase();
+    if (val.startsWith('bachelor')) return 'Bachelor';
+    if (val.startsWith('foundation')) return 'Foundation';
+    if (val.startsWith('diploma')) return 'Diploma';
+    if (val.startsWith('master')) return 'Masters';
+    return 'Other';
+}
+
+function formatProgrammeLabel(course) {
+    const level = normalizeLevel(course.level);
+    const name = (course.name || '').trim();
+    if (!name) return level;
+    const lower = name.toLowerCase();
+    if (lower.startsWith(level.toLowerCase())) {
+        return name;
+    }
+    return `${level} of ${name}`;
+}
+
+async function loadProgrammes() {
+    const select = document.getElementById('studentProgramme');
+    if (!select || typeof getCourses !== 'function') return;
+    try {
+        const courses = await getCourses();
+        const grouped = {};
+        courses.forEach(c => {
+            const lvl = normalizeLevel(c.level);
+            if (!grouped[lvl]) grouped[lvl] = [];
+            grouped[lvl].push(c);
+        });
+        PROGRAM_ORDER.forEach(level => {
+            const list = grouped[level] || [];
+            list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            list.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.id || course.name || '';
+                option.textContent = formatProgrammeLabel(course);
+                select.appendChild(option);
+            });
+        });
+    } catch (error) {
+        console.error('Error loading programmes:', error);
+    }
+}
 
 function getQueryParam(key) {
     const params = new URLSearchParams(window.location.search);
@@ -157,5 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initFirebase();
     }
     loadUniversity();
+    loadProgrammes();
     setStep(1);
 });
