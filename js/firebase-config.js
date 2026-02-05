@@ -28,8 +28,10 @@ function initFirebase() {
         // Initialize Firestore
         db = firebase.firestore();
         
-        // Initialize Auth
-        auth = firebase.auth();
+        // Initialize Auth (only if auth SDK is loaded)
+        if (firebase.auth) {
+            auth = firebase.auth();
+        }
         
         // Initialize Storage
         if (firebase.storage) {
