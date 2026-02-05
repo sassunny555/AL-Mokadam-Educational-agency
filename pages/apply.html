@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Now | AL-Mokadam Educational Agency</title>
+    <meta name="description" content="Apply to your chosen university with AL-Mokadam Educational Agency.">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        :root {
+            --apply-surface: #ffffff;
+            --apply-muted: #64748b;
+            --apply-border: #e2e8f0;
+            --apply-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --apply-surface: #0f172a;
+            --apply-muted: #94a3b8;
+            --apply-border: #1e293b;
+        }
+
+        .apply-page {
+            background: radial-gradient(circle at top left, rgba(220, 38, 38, 0.08), transparent 45%),
+                        radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.08), transparent 50%);
+            min-height: 100vh;
+            padding: 40px 0 80px;
+        }
+
+        .apply-shell {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .apply-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 28px;
+            border-radius: 18px;
+            background: var(--apply-surface);
+            box-shadow: var(--apply-shadow);
+            border: 1px solid var(--apply-border);
+        }
+
+        .apply-logo {
+            width: 96px;
+            height: 96px;
+            border-radius: 16px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--apply-border);
+        }
+
+        .apply-logo img {
+            width: 78%;
+            height: 78%;
+            object-fit: contain;
+        }
+
+        .apply-header h1 {
+            font-size: 1.75rem;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        [data-theme="dark"] .apply-header h1 {
+            color: #f8fafc;
+        }
+
+        .apply-header p {
+            color: var(--apply-muted);
+            margin: 0;
+        }
+
+        .apply-card {
+            margin-top: 28px;
+            background: var(--apply-surface);
+            border-radius: 20px;
+            border: 1px solid var(--apply-border);
+            box-shadow: var(--apply-shadow);
+            padding: 28px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 26px;
+        }
+
+        .step {
+            border: 1px solid var(--apply-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fef2f2;
+            opacity: 0.7;
+        }
+
+        [data-theme="dark"] .step {
+            background: #1f2937;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step.active {
+            opacity: 1;
+            border-color: var(--primary);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-label {
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 0.9rem;
+        }
+
+        [data-theme="dark"] .step-label {
+            color: #f8fafc;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group .clear-btn {
+            position: absolute;
+            right: 12px;
+            top: 34px;
+            font-size: 0.85rem;
+            color: var(--apply-muted);
+            cursor: pointer;
+        }
+
+        .form-group .clear-btn:hover {
+            color: var(--primary);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--apply-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--apply-border);
+            background: transparent;
+            color: inherit;
+        }
+
+        .section-title {
+            margin: 22px 0 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        [data-theme="dark"] .section-title {
+            color: #f8fafc;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .upload-card {
+            border: 1px dashed var(--apply-border);
+            border-radius: 14px;
+            padding: 14px;
+            background: #fff;
+        }
+
+        [data-theme="dark"] .upload-card {
+            background: #111827;
+        }
+
+        .upload-card p {
+            margin: 6px 0 12px;
+            color: var(--apply-muted);
+            font-size: 0.85rem;
+        }
+
+        .upload-card input[type="file"] {
+            display: none;
+        }
+
+        .upload-card .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .consent {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 0.85rem;
+            color: var(--apply-muted);
+        }
+
+        .form-actions {
+            margin-top: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--apply-border);
+            color: inherit;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid,
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="apply-page">
+        <div class="apply-shell">
+            <header class="apply-header">
+                <div class="apply-logo" id="applyLogo">
+                    <img src="../assets/images/logo.png" alt="University Logo">
+                </div>
+                <div>
+                    <h1 id="applyUniversityName">Apply to Malaysian University</h1>
+                    <p id="applySubtitle">Complete the form to begin your admission process with AL‑Mokadam.</p>
+                </div>
+            </header>
+
+            <div class="apply-card">
+                <div class="steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Personal & Course</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Guardian Details</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Upload Documents</div>
+                    </div>
+                </div>
+
+                <div class="form-step active" data-step="1">
+                    <h3 class="section-title">Personal & Course</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="studentName" placeholder="Enter your full name">
+                            <span class="clear-btn" onclick="clearInput('studentName')">×</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Nationality</label>
+                            <select id="studentNationality">
+                                <option value="">Select your nationality</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="India">India</option>
+                                <option value="Nigeria">Nigeria</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="studentEmail" placeholder="Enter your email address">
+                            <span class="clear-btn" onclick="clearInput('studentEmail')">×</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Country of Residence</label>
+                            <select id="studentCountry">
+                                <option value="">Select country</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="India">India</option>
+                                <option value="Nigeria">Nigeria</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="tel" id="studentPhone" placeholder="Enter contact no.">
+                        </div>
+                        <div class="form-group">
+                            <label>City of Residence</label>
+                            <input type="text" id="studentCity" placeholder="Enter your residence city">
+                            <span class="clear-btn" onclick="clearInput('studentCity')">×</span>
+                        </div>
+                        <div class="form-group">
+                            <label>What is your preferred programme?</label>
+                            <select id="studentProgramme">
+                                <option value="">Select your preferred programme</option>
+                                <option value="Foundation">Foundation</option>
+                                <option value="Diploma">Diploma</option>
+                                <option value="Bachelor">Bachelor</option>
+                                <option value="Masters">Masters</option>
+                                <option value="PhD">PhD</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="2">
+                    <h3 class="section-title">Parent/Guardian Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Parent/Guardian’s Name</label>
+                            <input type="text" id="guardianName" placeholder="Enter your Parent/Guardian’s full name">
+                            <span class="clear-btn" onclick="clearInput('guardianName')">×</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Parent/Guardian’s Email Address</label>
+                            <input type="email" id="guardianEmail" placeholder="Enter your Parent/Guardian’s email address">
+                            <span class="clear-btn" onclick="clearInput('guardianEmail')">×</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Parent/Guardian’s Contact Number</label>
+                            <input type="tel" id="guardianPhone" placeholder="Enter Parent/Guardian’s contact no.">
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="guardianCountry">
+                                <option value="">Select Country</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="India">India</option>
+                                <option value="Nigeria">Nigeria</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="3">
+                    <h3 class="section-title">Upload Documents</h3>
+                    <div class="upload-grid">
+                        <div class="upload-card">
+                            <strong>High School Certificate or equivalent</strong>
+                            <p id="fileLabel1">No file selected</p>
+                            <label class="upload-btn">
+                                Select File
+                                <input type="file" id="docHighSchool" onchange="updateFileLabel('fileLabel1', this)">
+                            </label>
+                        </div>
+                        <div class="upload-card">
+                            <strong>White Background Photo</strong>
+                            <p id="fileLabel2">No file selected</p>
+                            <label class="upload-btn">
+                                Select File
+                                <input type="file" id="docPhoto" onchange="updateFileLabel('fileLabel2', this)">
+                            </label>
+                        </div>
+                        <div class="upload-card">
+                            <strong>Passport info page</strong>
+                            <p id="fileLabel3">No file selected</p>
+                            <label class="upload-btn">
+                                Select File
+                                <input type="file" id="docPassport" onchange="updateFileLabel('fileLabel3', this)">
+                            </label>
+                        </div>
+                        <div class="upload-card">
+                            <strong>Additional Documents</strong>
+                            <p id="fileLabel4">No file selected</p>
+                            <label class="upload-btn">
+                                Select File
+                                <input type="file" id="docAdditional" onchange="updateFileLabel('fileLabel4', this)">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="consent">
+                        <input type="checkbox" id="consentCheck">
+                        <label for="consentCheck">
+                            By submitting this form, I agree to the terms & conditions.
+                            <br>
+                            <span>After submitting your application, your files will be reviewed and an educational counselor will communicate with you to start your admission procedures and provide you with more information.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" type="button" id="backBtn" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary btn-submit" type="button" id="nextBtn" onclick="nextStep()">
+                        Next
+                        <span>→</span>
+                    </button>
+                    <button class="btn btn-primary btn-submit" type="button" id="submitBtn" onclick="submitApplication()" style="display:none;">
+                        Submit Application
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/apply.js"></script>
+</body>
+</html>

@@ -236,7 +236,6 @@
             gap: 6px;
             font-size: 0.875rem;
             color: #64748b;
-            margin-top: 4px;
         }
         
         .uni-courses-count svg {
@@ -248,6 +247,19 @@
         .uni-courses-count strong {
             color: var(--primary);
             font-weight: 600;
+        }
+
+        .uni-card-actions .btn {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        .uni-courses-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
         }
         
         .uni-page-footer {
@@ -666,10 +678,15 @@
                             ${locationIcon}
                             ${uni.location || 'Malaysia'}
                         </p>
-                        <p class="uni-courses-count">
-                            ${bookIcon}
-                            <strong>${uni.courseOfferings ? uni.courseOfferings.length : 0}</strong> Courses Offered
-                        </p>
+                        <div class="uni-courses-actions">
+                            <p class="uni-courses-count">
+                                ${bookIcon}
+                                <strong>${uni.courseOfferings ? uni.courseOfferings.length : 0}</strong> Courses Offered
+                            </p>
+                            <div class="uni-card-actions">
+                                <span class="btn btn-outline" onclick="event.stopPropagation(); event.preventDefault(); window.location.href='apply.html?uni=${uni.id}'">Apply Now</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="uni-page-footer">
                         <span class="uni-qs-label">World Ranking</span>

@@ -14,7 +14,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app, db, auth;
+let app, db, auth, storage;
 
 function initFirebase() {
     if (typeof firebase !== 'undefined') {
@@ -30,6 +30,11 @@ function initFirebase() {
         
         // Initialize Auth
         auth = firebase.auth();
+        
+        // Initialize Storage
+        if (firebase.storage) {
+            storage = firebase.storage();
+        }
         
         console.log('Firebase initialized successfully');
         return true;
@@ -53,6 +58,25 @@ async function addDocument(collection, data) {
         return docRef.id;
     } catch (error) {
         console.error('Error adding document:', error);
+        throw error;
+    }
+}
+
+// ============================================
+// Storage Helper Functions
+// ============================================
+
+async function uploadFileToStorage(file, path) {
+    try {
+        if (!storage) {
+            throw new Error('Firebase Storage not initialized');
+        }
+        const ref = storage.ref().child(path);
+        const snapshot = await ref.put(file);
+        const url = await snapshot.ref.getDownloadURL();
+        return { path, url, name: file.name, size: file.size };
+    } catch (error) {
+        console.error('Error uploading file:', error);
         throw error;
     }
 }
@@ -265,4 +289,3 @@ async function getCoursesByCategory(category) {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', initFirebase);
-

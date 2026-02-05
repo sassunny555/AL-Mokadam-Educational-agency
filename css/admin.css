@@ -301,6 +301,124 @@
     background: var(--admin-primary);
     border-radius: 12px;
     font-size: 1.75rem;
+    color: var(--white);
+}
+
+/* ---------- Stepper ---------- */
+.stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stepper input {
+    width: 70px;
+    text-align: center;
+}
+
+.stepper-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ---------- Month Picker (Dropdown) ---------- */
+.month-dropdown {
+    position: relative;
+}
+
+.month-dropdown-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--gray-700);
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.month-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    padding: 10px;
+    display: none;
+    z-index: 5;
+}
+
+.month-dropdown.open .month-dropdown-menu {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.month-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid var(--gray-200);
+    border-radius: 999px;
+    background: var(--white);
+    font-size: 0.8125rem;
+    color: var(--gray-700);
+    cursor: pointer;
+}
+
+.month-option input {
+    accent-color: var(--admin-primary);
+}
+
+/* ---------- FAQ Editor ---------- */
+.faq-row.collapsed .faq-row-body {
+    display: none;
+}
+
+/* ---------- Course Picker Fields ---------- */
+.picker-course {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+}
+
+.picker-course-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.picker-course-fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.picker-course-fields.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.picker-course-fields .mini-field label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
 }
 
 .stat-info h3 {

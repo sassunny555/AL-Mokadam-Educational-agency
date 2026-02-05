@@ -279,7 +279,7 @@ async function loadCourses() {
             const data = doc.data();
             tbody.innerHTML += `
                 <tr>
-                    <td>${data.image ? `<img src="${data.image}" class="table-img" alt="">` : '📚'}</td>
+                    <td>${data.image ? `<img src="${data.image}" class="table-img" alt="">` : '<i class="bi bi-journal-bookmark"></i>'}</td>
                     <td><strong>${data.name || 'N/A'}</strong></td>
                     <td>${data.level || 'Bachelor'}</td>
                     <td>${data.category || 'Other'}</td>
@@ -414,7 +414,7 @@ async function loadServices() {
             const data = doc.data();
             tbody.innerHTML += `
                 <tr>
-                    <td>${data.icon || '🛠️'}</td>
+                    <td>${renderServiceIcon(data.icon)}</td>
                     <td>${data.title || 'N/A'}</td>
                     <td>${data.order || 0}</td>
                     <td><span class="status status-${data.active ? 'active' : 'inactive'}">${data.active ? 'Active' : 'Inactive'}</span></td>
@@ -428,6 +428,15 @@ async function loadServices() {
     } catch (error) {
         console.error('Error loading services:', error);
     }
+}
+
+function renderServiceIcon(icon) {
+    if (!icon) return '<i class="bi bi-tools"></i>';
+    const trimmed = icon.trim();
+    if (trimmed.startsWith('<i')) return trimmed;
+    if (trimmed.startsWith('bi-')) return `<i class="bi ${trimmed}"></i>`;
+    if (trimmed.startsWith('bi ')) return `<i class="${trimmed}"></i>`;
+    return '<i class="bi bi-tools"></i>';
 }
 
 async function loadInquiries() {
@@ -554,7 +563,7 @@ function editItem(type, id) {
     openModal(type, id);
 }
 
-function openModal(type, id = null) {
+async function openModal(type, id = null) {
     editingType = type;
     editingId = id;
     universityCoursesTemp = [];
@@ -579,6 +588,9 @@ function openModal(type, id = null) {
     if (id) {
         loadItemForEdit(type, id);
     } else if (type === 'university') {
+        if (availableCourses.length === 0) {
+            await loadAvailableCourses();
+        }
         // Initialize folder picker for new university
         setTimeout(() => {
             const container = document.getElementById('coursePickerContainer');
@@ -606,10 +618,15 @@ function addFaqRow(question = '', answer = '') {
     div.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <strong style="font-size: 0.875rem; color: #64748b;">FAQ Item</strong>
-            <button type="button" onclick="removeFaqRow('${faqId}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Remove</button>
+            <div style="display: flex; gap: 8px;">
+                <button type="button" onclick="toggleFaqRow('${faqId}')" style="background: #e2e8f0; color: #334155; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Minimize</button>
+                <button type="button" onclick="removeFaqRow('${faqId}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Remove</button>
+            </div>
         </div>
-        <input type="text" class="faq-question" placeholder="Question" value="${question.replace(/"/g, '&quot;')}" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px;">
-        <textarea class="faq-answer" placeholder="Answer" rows="2" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; resize: vertical;">${answer}</textarea>
+        <div class="faq-row-body">
+            <input type="text" class="faq-question" placeholder="Question" value="${question.replace(/"/g, '&quot;')}" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px;">
+            <textarea class="faq-answer" placeholder="Answer" rows="2" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; resize: vertical;">${answer}</textarea>
+        </div>
     `;
     editor.appendChild(div);
 }
@@ -626,6 +643,16 @@ function removeFaqRow(id) {
     }
 }
 
+function toggleFaqRow(id) {
+    const row = document.getElementById(id);
+    if (!row) return;
+    row.classList.toggle('collapsed');
+    const btn = row.querySelector('button[onclick^="toggleFaqRow"]');
+    if (btn) {
+        btn.textContent = row.classList.contains('collapsed') ? 'Expand' : 'Minimize';
+    }
+}
+
 function getFaqsFromEditor() {
     const faqs = [];
     document.querySelectorAll('.faq-row').forEach(row => {
@@ -636,6 +663,63 @@ function getFaqsFromEditor() {
         }
     });
     return faqs;
+}
+
+function renderMonthPicker(selected = []) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const options = months.map(m => `
+        <label class="month-option">
+            <input type="checkbox" value="${m}" ${selected.includes(m) ? 'checked' : ''} onchange="updateMonthSummary()">
+            <span>${m}</span>
+        </label>
+    `).join('');
+    return `
+        <button type="button" class="month-dropdown-toggle" onclick="toggleMonthDropdown()">
+            <span id="monthSummary">Select months</span>
+            <i class="bi bi-chevron-down"></i>
+        </button>
+        <div class="month-dropdown-menu">
+            ${options}
+        </div>
+    `;
+}
+
+function getSelectedMonths() {
+    const container = document.getElementById('itemIntakeMonths');
+    if (!container) return [];
+    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(i => i.value);
+}
+
+function setSelectedMonths(months) {
+    const container = document.getElementById('itemIntakeMonths');
+    if (!container) return;
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = months.includes(cb.value);
+    });
+    updateMonthSummary();
+}
+
+function toggleMonthDropdown() {
+    const container = document.getElementById('itemIntakeMonths');
+    if (!container) return;
+    container.classList.toggle('open');
+}
+
+function updateMonthSummary() {
+    const selected = getSelectedMonths();
+    const summary = document.getElementById('monthSummary');
+    if (!summary) return;
+    summary.textContent = selected.length ? selected.join(', ') : 'Select months';
+}
+
+function stepperChange(inputId, delta) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const min = parseInt(input.min || '1', 10);
+    const max = parseInt(input.max || '50', 10);
+    const current = parseInt(input.value || min, 10);
+    const next = Math.min(max, Math.max(min, current + delta));
+    input.value = next;
 }
 
 function closeModal() {
@@ -775,13 +859,24 @@ function getUniversityForm() {
                     <input type="date" id="itemNextIntake">
                 </div>
                 <div class="form-group">
-                    <label>Intake Months (comma-separated)</label>
-                    <input type="text" id="itemIntakeMonths" placeholder="Jan, Jul, Sep">
+                    <label>Intake Months</label>
+                    <div class="month-dropdown" id="itemIntakeMonths">
+                        ${renderMonthPicker()}
+                    </div>
                 </div>
             </div>
             <div class="checkbox-group" style="margin-bottom: 16px;">
                 <input type="checkbox" id="itemOfferLetterFree" checked>
                 <label for="itemOfferLetterFree">Offer Letter is Free</label>
+            </div>
+            
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Courses Offered</h4>
+            
+            <div class="form-group">
+                <div class="course-picker" id="coursePickerContainer">
+                    <!-- Folder picker rendered dynamically -->
+                </div>
             </div>
             
             <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
@@ -792,15 +887,6 @@ function getUniversityForm() {
                     <p class="empty-hint" id="noFaqsHint">No FAQs added. Click button below to add.</p>
                 </div>
                 <button type="button" class="btn btn-outline" onclick="addFaqRow()" style="margin-top: 10px;">+ Add FAQ</button>
-            </div>
-            
-            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
-            <h4 style="margin-bottom: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Courses Offered</h4>
-            
-            <div class="form-group">
-                <div class="course-picker" id="coursePickerContainer">
-                    <!-- Folder picker rendered dynamically -->
-                </div>
             </div>
             
             <div class="checkbox-group">
@@ -871,6 +957,8 @@ function selectCourse(courseId, courseName, courseLevel) {
         name: courseName,
         level: courseLevel,
         fees: 0,
+        currency: 'MYR',
+        durationYears: 3,
         intake: ['September']
     });
     
@@ -913,29 +1001,7 @@ function renderSelectedCourses() {
         return;
     }
     
-    container.innerHTML = universityCoursesTemp.map((c, index) => `
-        <div class="selected-course-item">
-            <div class="course-info-row">
-                <strong>${c.name}</strong>
-                <span class="course-level">${c.level}</span>
-                <button type="button" class="btn-remove" onclick="removeCourse(${index})">×</button>
-            </div>
-            <div class="course-fields">
-                <div class="mini-field">
-                    <label>Fees (MYR/year)</label>
-                    <input type="number" value="${c.fees}" onchange="updateCourseFees(${index}, this.value)" placeholder="25000">
-                </div>
-                <div class="mini-field">
-                    <label>Intake</label>
-                    <select onchange="updateCourseIntake(${index}, this.value)">
-                        <option value="September" ${c.intake.includes('September') ? 'selected' : ''}>September</option>
-                        <option value="February" ${c.intake.includes('February') ? 'selected' : ''}>February</option>
-                        <option value="Both" ${c.intake.length > 1 ? 'selected' : ''}>Both</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    container.innerHTML = '';
 }
 
 function removeCourse(index) {
@@ -945,6 +1011,14 @@ function removeCourse(index) {
 
 function updateCourseFees(index, fees) {
     universityCoursesTemp[index].fees = parseInt(fees) || 0;
+}
+
+function updateCourseCurrency(index, currency) {
+    universityCoursesTemp[index].currency = currency;
+}
+
+function updateCourseDuration(index, years) {
+    universityCoursesTemp[index].durationYears = parseInt(years) || 1;
 }
 
 function updateCourseIntake(index, intake) {
@@ -1056,7 +1130,7 @@ function getServiceForm() {
             <div class="form-row">
                 <div class="form-group">
                     <label>Icon (Emoji)</label>
-                    <input type="text" id="itemIcon" placeholder="💬" maxlength="5">
+                    <input type="text" id="itemIcon" placeholder="bi-chat-dots" maxlength="30">
                 </div>
                 <div class="form-group">
                     <label>Order</label>
@@ -1130,7 +1204,7 @@ async function loadItemForEdit(type, id) {
                     const date = doc.nextIntakeDate.toDate ? doc.nextIntakeDate.toDate() : new Date(doc.nextIntakeDate);
                     document.getElementById('itemNextIntake').value = date.toISOString().split('T')[0];
                 }
-                document.getElementById('itemIntakeMonths').value = doc.intakeMonths?.join(', ') || '';
+                setSelectedMonths(doc.intakeMonths || []);
                 document.getElementById('itemOfferLetterFree').checked = doc.offerLetterFree !== false;
                 
                 // Load FAQs
@@ -1148,6 +1222,8 @@ async function loadItemForEdit(type, id) {
                             level: course ? course.level : 'Bachelor',
                             category: course ? course.category : 'Other',
                             fees: co.fees || 0,
+                            currency: co.currency || 'MYR',
+                            durationYears: co.durationYears || 3,
                             intake: co.intake || ['September']
                         };
                     });
@@ -1229,12 +1305,13 @@ async function saveItem(e) {
             const courseOfferings = universityCoursesTemp.map(c => ({
                 courseId: c.courseId,
                 fees: c.fees,
+                currency: c.currency || 'MYR',
+                durationYears: c.durationYears || 3,
                 intake: c.intake
             }));
             
-            // Parse intake months
-            const intakeMonthsStr = document.getElementById('itemIntakeMonths').value;
-            const intakeMonths = intakeMonthsStr ? intakeMonthsStr.split(',').map(m => m.trim()).filter(m => m) : [];
+            // Parse intake months from picker
+            const intakeMonths = getSelectedMonths();
             
             // Parse next intake date
             const nextIntakeDateStr = document.getElementById('itemNextIntake').value;
@@ -1339,6 +1416,7 @@ async function deleteItem(collection, id) {
 
 let courseFolders = [];
 let draggedCourseId = null;
+let openPickerFolders = new Set();
 
 // Load folders and courses with folder tree view
 async function loadCoursesWithFolders() {
@@ -1411,7 +1489,7 @@ function renderFolder(folder, courses) {
                  ondragleave="handleDragLeave(event)"
                  ondrop="handleDrop(event, '${folder.id}')">
                 <span class="folder-toggle">▶</span>
-                <span class="folder-icon">📁</span>
+                <span class="folder-icon"><i class="bi bi-folder2"></i></span>
                 <span class="folder-name">${folder.name}</span>
                 <span class="folder-count">${courses.length}</span>
                 <div class="folder-actions" onclick="event.stopPropagation()">
@@ -1434,7 +1512,7 @@ function renderUncategorizedSection(courses) {
                  ondragover="handleDragOver(event, null)"
                  ondragleave="handleDragLeave(event)"
                  ondrop="handleDrop(event, null)">
-                <span>📋</span>
+                <span><i class="bi bi-collection"></i></span>
                 <span>Uncategorized (${courses.length})</span>
             </div>
             <div class="folder-courses" style="display: block;">
@@ -1615,12 +1693,42 @@ function renderFolderPicker() {
 function renderPickerFolder(folder, courses) {
     const coursesHTML = courses.map(c => {
         const isSelected = universityCoursesTemp.some(uc => uc.courseId === c.id);
+        const selectedCourse = isSelected ? universityCoursesTemp.find(uc => uc.courseId === c.id) : null;
+        const feesVal = selectedCourse ? selectedCourse.fees : '';
+        const currencyVal = selectedCourse ? selectedCourse.currency : 'MYR';
+        const durationVal = selectedCourse ? selectedCourse.durationYears : 3;
         return `
-            <div class="picker-course" onclick="togglePickerCourse('${c.id}', '${c.name.replace(/'/g, "\\'")}', '${c.level}')">
-                <input type="checkbox" ${isSelected ? 'checked' : ''} data-course-id="${c.id}">
-                <div class="picker-course-info">
-                    <strong>${c.name}</strong>
-                    <span>${c.level} • ${c.category || 'Other'}</span>
+            <div class="picker-course" data-course-row="${c.id}">
+                <div class="picker-course-main" onclick="togglePickerCourse('${c.id}', '${c.name.replace(/'/g, "\\'")}', '${c.level}')">
+                    <input type="checkbox" ${isSelected ? 'checked' : ''} data-course-id="${c.id}">
+                    <div class="picker-course-info">
+                        <strong>${c.name}</strong>
+                        <span>${c.level} • ${c.category || 'Other'}</span>
+                    </div>
+                </div>
+                <div class="picker-course-fields ${isSelected ? '' : 'disabled'}">
+                    <div class="mini-field">
+                        <label>Amount / Year</label>
+                        <input type="number" value="${feesVal}" placeholder="25000" ${isSelected ? '' : 'disabled'} onchange="updateCourseFeesById('${c.id}', this.value)">
+                    </div>
+                    <div class="mini-field">
+                        <label>Currency</label>
+                        <select ${isSelected ? '' : 'disabled'} onchange="updateCourseCurrencyById('${c.id}', this.value)">
+                            <option value="MYR" ${currencyVal === 'MYR' ? 'selected' : ''}>MYR</option>
+                            <option value="USD" ${currencyVal === 'USD' ? 'selected' : ''}>USD</option>
+                            <option value="GBP" ${currencyVal === 'GBP' ? 'selected' : ''}>GBP</option>
+                            <option value="EUR" ${currencyVal === 'EUR' ? 'selected' : ''}>EUR</option>
+                            <option value="SAR" ${currencyVal === 'SAR' ? 'selected' : ''}>SAR</option>
+                            <option value="AED" ${currencyVal === 'AED' ? 'selected' : ''}>AED</option>
+                            <option value="PKR" ${currencyVal === 'PKR' ? 'selected' : ''}>PKR</option>
+                            <option value="BDT" ${currencyVal === 'BDT' ? 'selected' : ''}>BDT</option>
+                            <option value="NGN" ${currencyVal === 'NGN' ? 'selected' : ''}>NGN</option>
+                        </select>
+                    </div>
+                    <div class="mini-field">
+                        <label>Duration (Years)</label>
+                        <input type="number" value="${durationVal}" min="1" max="10" step="1" ${isSelected ? '' : 'disabled'} onchange="updateCourseDurationById('${c.id}', this.value)">
+                    </div>
                 </div>
             </div>
         `;
@@ -1629,8 +1737,9 @@ function renderPickerFolder(folder, courses) {
     const allSelected = courses.every(c => universityCoursesTemp.some(uc => uc.courseId === c.id));
     const someSelected = courses.some(c => universityCoursesTemp.some(uc => uc.courseId === c.id));
     
+    const isOpen = openPickerFolders.has(folder.id);
     return `
-        <div class="picker-folder" data-picker-folder="${folder.id}">
+        <div class="picker-folder${isOpen ? ' open' : ''}" data-picker-folder="${folder.id}">
             <div class="picker-folder-header" onclick="togglePickerFolder('${folder.id}')">
                 <input type="checkbox" 
                        ${allSelected ? 'checked' : ''} 
@@ -1650,7 +1759,14 @@ function renderPickerFolder(folder, courses) {
 
 function togglePickerFolder(folderId) {
     const el = document.querySelector(`.picker-folder[data-picker-folder="${folderId}"]`);
-    if (el) el.classList.toggle('open');
+    if (el) {
+        el.classList.toggle('open');
+        if (el.classList.contains('open')) {
+            openPickerFolders.add(folderId);
+        } else {
+            openPickerFolders.delete(folderId);
+        }
+    }
 }
 
 function toggleFolderSelection(folderId) {
@@ -1670,7 +1786,10 @@ function toggleFolderSelection(folderId) {
                 courseName: course.name,
                 level: course.level,
                 fees: '',
-                category: course.category || 'Other'
+                category: course.category || 'Other',
+                currency: 'MYR',
+                durationYears: 3,
+                intake: ['September']
             });
         } else if (!shouldSelect && idx !== -1) {
             universityCoursesTemp.splice(idx, 1);
@@ -1692,11 +1811,32 @@ function togglePickerCourse(courseId, courseName, level) {
             courseName: courseName,
             level: level,
             fees: '',
-            category: course?.category || 'Other'
+            category: course?.category || 'Other',
+            currency: 'MYR',
+            durationYears: 3,
+            intake: ['September']
         });
     }
     
     refreshFolderPicker();
+}
+
+function updateCourseFeesById(courseId, fees) {
+    const idx = universityCoursesTemp.findIndex(uc => uc.courseId === courseId);
+    if (idx === -1) return;
+    universityCoursesTemp[idx].fees = parseInt(fees) || 0;
+}
+
+function updateCourseCurrencyById(courseId, currency) {
+    const idx = universityCoursesTemp.findIndex(uc => uc.courseId === courseId);
+    if (idx === -1) return;
+    universityCoursesTemp[idx].currency = currency;
+}
+
+function updateCourseDurationById(courseId, years) {
+    const idx = universityCoursesTemp.findIndex(uc => uc.courseId === courseId);
+    if (idx === -1) return;
+    universityCoursesTemp[idx].durationYears = parseInt(years) || 1;
 }
 
 function refreshFolderPicker() {
