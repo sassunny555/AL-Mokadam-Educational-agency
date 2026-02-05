@@ -30,8 +30,10 @@ async function loadUniversity() {
         if (!uni) return;
         selectedUniversity = uni;
         const nameEl = document.getElementById('applyUniversityName');
+        const subtitleEl = document.getElementById('applySubtitle');
         const logoEl = document.getElementById('applyLogo');
         if (nameEl) nameEl.textContent = `Apply to ${uni.name}`;
+        if (subtitleEl) subtitleEl.textContent = `Complete the form to begin your admission process with ${uni.name}.`;
         if (logoEl) {
             if (uni.logo) {
                 const logoPath = uni.logo.startsWith('../') || uni.logo.startsWith('http') ? uni.logo : '../' + uni.logo;
