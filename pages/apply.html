@@ -65,10 +65,18 @@
             object-fit: contain;
         }
 
+        .logo-placeholder {
+            width: 60%;
+            height: 60%;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(15, 23, 42, 0.1));
+        }
+
         .apply-header h1 {
             font-size: 1.75rem;
             color: var(--navy);
             margin-bottom: 6px;
+            min-height: 34px;
         }
 
         [data-theme="dark"] .apply-header h1 {
@@ -78,6 +86,29 @@
         .apply-header p {
             color: var(--apply-muted);
             margin: 0;
+            min-height: 20px;
+        }
+
+        .apply-header.loading h1,
+        .apply-header.loading p {
+            color: transparent;
+            background: linear-gradient(90deg, rgba(148, 163, 184, 0.2), rgba(148, 163, 184, 0.4), rgba(148, 163, 184, 0.2));
+            border-radius: 8px;
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        .apply-header.loading h1 {
+            width: 70%;
+        }
+
+        .apply-header.loading p {
+            width: 90%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .apply-card {
@@ -281,13 +312,13 @@
 <body>
     <div class="apply-page">
         <div class="apply-shell">
-            <header class="apply-header">
+            <header class="apply-header loading" id="applyHeader">
                 <div class="apply-logo" id="applyLogo">
-                    <img src="../assets/images/logo.png" alt="University Logo">
+                    <div class="logo-placeholder"></div>
                 </div>
                 <div>
-                    <h1 id="applyUniversityName">Apply to Malaysian University</h1>
-                    <p id="applySubtitle">Complete the form to begin your admission process with AL-Mokadam.</p>
+                    <h1 id="applyUniversityName"></h1>
+                    <p id="applySubtitle"></p>
                 </div>
             </header>
 

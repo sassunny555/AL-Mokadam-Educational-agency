@@ -32,6 +32,7 @@ async function loadUniversity() {
         const nameEl = document.getElementById('applyUniversityName');
         const subtitleEl = document.getElementById('applySubtitle');
         const logoEl = document.getElementById('applyLogo');
+        const headerEl = document.getElementById('applyHeader');
         if (nameEl) nameEl.textContent = `Apply to ${uni.name}`;
         if (subtitleEl) subtitleEl.textContent = `Complete the form to begin your admission process with ${uni.name}.`;
         if (logoEl) {
@@ -43,6 +44,7 @@ async function loadUniversity() {
                 logoEl.innerHTML = `<span>${initials || 'UNI'}</span>`;
             }
         }
+        if (headerEl) headerEl.classList.remove('loading');
     } catch (error) {
         console.error('Error loading university:', error);
     }
