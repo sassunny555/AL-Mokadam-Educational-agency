@@ -27,7 +27,7 @@
             background: radial-gradient(circle at top left, rgba(220, 38, 38, 0.08), transparent 45%),
                         radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.08), transparent 50%);
             min-height: 100vh;
-            padding: 40px 0 80px;
+            padding: 110px 0 80px;
         }
 
         .apply-body .navbar {
@@ -37,6 +37,16 @@
 
         .apply-body .navbar.scrolled {
             background: #ffffff;
+        }
+
+        .apply-body .navbar .container {
+            flex-wrap: nowrap;
+        }
+
+        .apply-body .nav-cta,
+        .apply-body .nav-toggle,
+        .apply-body .theme-toggle {
+            flex-shrink: 0;
         }
 
         .apply-body .nav-logo span,
@@ -61,9 +71,42 @@
             color: var(--primary);
         }
 
+        .apply-body .theme-toggle {
+            background: var(--gray-100);
+            color: var(--navy);
+        }
+
+        .apply-body .theme-toggle:hover {
+            background: var(--gray-200);
+        }
+
+        [data-theme="dark"] .apply-body .theme-toggle {
+            background: #111827;
+            color: #fbbf24;
+        }
+
         .apply-body .breadcrumb {
             padding: 0;
             background: transparent;
+        }
+
+        [data-theme="dark"] .apply-body .navbar,
+        [data-theme="dark"] .apply-body .navbar.scrolled {
+            background: #0f172a;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        [data-theme="dark"] .apply-body .nav-logo span,
+        [data-theme="dark"] .apply-body .nav-links a {
+            color: #e2e8f0;
+        }
+
+        [data-theme="dark"] .apply-body .nav-links a:hover {
+            color: #fca5a5;
+        }
+
+        [data-theme="dark"] .apply-body .nav-toggle span {
+            background: #e2e8f0;
         }
 
         .apply-shell {
@@ -343,6 +386,23 @@
             gap: 12px;
         }
 
+        .form-warning {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        [data-theme="dark"] .form-warning {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.35);
+            color: #fecaca;
+        }
+
         .btn-secondary {
             background: transparent;
             border: 1px solid var(--apply-border);
@@ -597,6 +657,7 @@
                         <span>→</span>
                     </button>
                 </div>
+                <div class="form-warning" id="formWarning"></div>
             </div>
         </div>
     </div>

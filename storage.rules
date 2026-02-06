@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.email in [
+               'admin@al-mokadam.edu',
+               'sassunny555@gmail.com',
+               'admin@email.com'
+             ];
+    }
+
+    match /applications/{allPaths=**} {
+      allow write: if true;
+      allow read: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

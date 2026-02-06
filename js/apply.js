@@ -76,7 +76,7 @@ function validatePhone() {
     const digits = phone.replace(/\D/g, '');
     if (!digits) return true;
     if (digits.length < 7 || digits.length > 15) {
-        alert(`Please enter a valid contact number (${code}).`);
+        showWarning(`Please enter a valid contact number (${code}).`);
         return false;
     }
     return true;
@@ -214,11 +214,59 @@ function setStep(step) {
 }
 
 function nextStep() {
+    if (!validateCurrentStep()) return;
     if (currentStep < 3) setStep(currentStep + 1);
 }
 
 function prevStep() {
     if (currentStep > 1) setStep(currentStep - 1);
+}
+
+function validateCurrentStep() {
+    clearWarning();
+    let requiredIds = [];
+    if (currentStep === 1) {
+        requiredIds = [
+            'studentName',
+            'studentNationality',
+            'studentEmail',
+            'studentCountry',
+            'studentPhone',
+            'studentCity',
+            'studentProgramme'
+        ];
+    } else if (currentStep === 2) {
+        requiredIds = [
+            'guardianName',
+            'guardianEmail',
+            'guardianPhone',
+            'guardianCountry'
+        ];
+    }
+    for (const id of requiredIds) {
+        const el = document.getElementById(id);
+        if (!el || !el.value || el.value.trim() === '') {
+            el?.focus?.();
+            showWarning('Please complete all required fields before continuing.');
+            return false;
+        }
+    }
+    if (currentStep === 1 && !validatePhone()) return false;
+    return true;
+}
+
+function showWarning(message) {
+    const warning = document.getElementById('formWarning');
+    if (!warning) return;
+    warning.textContent = message;
+    warning.style.display = 'block';
+}
+
+function clearWarning() {
+    const warning = document.getElementById('formWarning');
+    if (!warning) return;
+    warning.textContent = '';
+    warning.style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
