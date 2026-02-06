@@ -70,6 +70,23 @@ function updateFileLabel(labelId, input) {
     label.textContent = name;
 }
 
+function validatePhone() {
+    const code = document.getElementById('studentPhoneCode')?.value || '';
+    const phone = document.getElementById('studentPhone')?.value || '';
+    const digits = phone.replace(/\D/g, '');
+    if (!digits) return true;
+    if (digits.length < 7 || digits.length > 15) {
+        alert(`Please enter a valid contact number (${code}).`);
+        return false;
+    }
+    return true;
+}
+
+function sanitizePhone(input) {
+    if (!input) return;
+    input.value = input.value.replace(/\D/g, '');
+}
+
 async function loadUniversity() {
     const uniId = getQueryParam('uni') || getQueryParam('id');
     const headerEl = document.getElementById('applyHeader');
@@ -87,8 +104,10 @@ async function loadUniversity() {
         const nameEl = document.getElementById('applyUniversityName');
         const subtitleEl = document.getElementById('applySubtitle');
         const logoEl = document.getElementById('applyLogo');
+        const breadcrumbEl = document.getElementById('breadcrumbUniversity');
         if (nameEl) nameEl.textContent = `Apply to ${uni.name}`;
         if (subtitleEl) subtitleEl.textContent = `Complete the form to begin your admission process with ${uni.name}.`;
+        if (breadcrumbEl) breadcrumbEl.textContent = uni.shortCode || uni.name;
         if (logoEl) {
             if (uni.logo) {
                 const logoPath = uni.logo.startsWith('../') || uni.logo.startsWith('http') ? uni.logo : '../' + uni.logo;
@@ -119,6 +138,7 @@ async function submitApplication() {
         alert('Please agree to the terms & conditions before submitting.');
         return;
     }
+    if (!validatePhone()) return;
 
     const student = {
         name: document.getElementById('studentName').value.trim(),
@@ -126,6 +146,7 @@ async function submitApplication() {
         email: document.getElementById('studentEmail').value.trim(),
         country: document.getElementById('studentCountry').value,
         phone: document.getElementById('studentPhone').value.trim(),
+        phoneCode: document.getElementById('studentPhoneCode').value,
         city: document.getElementById('studentCity').value.trim(),
         programme: document.getElementById('studentProgramme').value
     };

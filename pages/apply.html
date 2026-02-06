@@ -30,6 +30,42 @@
             padding: 40px 0 80px;
         }
 
+        .apply-body .navbar {
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .apply-body .navbar.scrolled {
+            background: #ffffff;
+        }
+
+        .apply-body .nav-logo span,
+        .apply-body .nav-links a {
+            color: var(--navy);
+        }
+
+        .apply-body .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .apply-body .nav-logo span {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .apply-body .nav-toggle span {
+            background: var(--navy);
+        }
+
+        .apply-body .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .apply-body .breadcrumb {
+            padding: 0;
+            background: transparent;
+        }
+
         .apply-shell {
             max-width: 980px;
             margin: 0 auto;
@@ -190,10 +226,13 @@
         .form-group .clear-btn {
             position: absolute;
             right: 12px;
-            top: 34px;
+            top: 50%;
+            transform: translateY(4px);
             font-size: 0.85rem;
             color: var(--apply-muted);
             cursor: pointer;
+            padding: 4px;
+            line-height: 1;
         }
 
         .form-group .clear-btn:hover {
@@ -215,6 +254,25 @@
             border: 1px solid var(--apply-border);
             background: transparent;
             color: inherit;
+            appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, var(--apply-muted) 50%), linear-gradient(135deg, var(--apply-muted) 50%, transparent 50%);
+            background-position: calc(100% - 18px) calc(50% + 2px), calc(100% - 12px) calc(50% + 2px);
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+        }
+
+        .form-group input {
+            background-image: none;
+        }
+
+        .form-group select {
+            padding-right: 36px;
+        }
+
+        .phone-group {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
         }
 
         .section-title {
@@ -309,9 +367,43 @@
         }
     </style>
 </head>
-<body>
+<body class="apply-body">
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-logo">
+                <img src="../assets/images/logo.png" alt="AL-Mokadam Logo">
+                <span>AL-Mokadam</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="services.html">Services</a></li>
+                <li><a href="universities.html" class="active">Universities</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="../index.html#testimonials">Success Stories</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="contact.html" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()"></button>
+        </div>
+    </nav>
     <div class="apply-page">
         <div class="apply-shell">
+            <nav class="breadcrumb" aria-label="Breadcrumb" style="margin-bottom: 18px;">
+                <ul class="breadcrumb-list">
+                    <li><a href="../index.html">Home</a></li>
+                    <li class="breadcrumb-separator">›</li>
+                    <li><a href="universities.html">Universities</a></li>
+                    <li class="breadcrumb-separator">›</li>
+                    <li class="breadcrumb-current" id="breadcrumbUniversity">Apply</li>
+                </ul>
+            </nav>
             <header class="apply-header loading" id="applyHeader">
                 <div class="apply-logo" id="applyLogo">
                     <div class="logo-placeholder"></div>
@@ -381,7 +473,23 @@
                         </div>
                         <div class="form-group">
                             <label>Contact Number</label>
-                            <input type="tel" id="studentPhone" placeholder="Enter contact no.">
+                            <div class="phone-group">
+                                <select id="studentPhoneCode">
+                                    <option value="+60">Malaysia (+60)</option>
+                                    <option value="+880">Bangladesh (+880)</option>
+                                    <option value="+92">Pakistan (+92)</option>
+                                    <option value="+91">India (+91)</option>
+                                    <option value="+234">Nigeria (+234)</option>
+                                    <option value="+966">Saudi Arabia (+966)</option>
+                                    <option value="+971">United Arab Emirates (+971)</option>
+                                    <option value="+1">United States (+1)</option>
+                                    <option value="+44">United Kingdom (+44)</option>
+                                    <option value="+61">Australia (+61)</option>
+                                    <option value="+65">Singapore (+65)</option>
+                                    <option value="+62">Indonesia (+62)</option>
+                                </select>
+                                <input type="tel" id="studentPhone" placeholder="Enter contact no." inputmode="numeric" pattern="[0-9]*" oninput="sanitizePhone(this)" onblur="validatePhone()">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>City of Residence</label>
@@ -392,11 +500,6 @@
                             <label>What is your preferred programme?</label>
                             <select id="studentProgramme">
                                 <option value="">Select your preferred programme</option>
-                                <option value="Foundation">Foundation</option>
-                                <option value="Diploma">Diploma</option>
-                                <option value="Bachelor">Bachelor</option>
-                                <option value="Masters">Masters</option>
-                                <option value="PhD">PhD</option>
                             </select>
                         </div>
                     </div>
@@ -503,6 +606,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="../js/firebase-config.js"></script>
+    <script src="../js/main.js"></script>
     <script src="../js/dark-mode.js"></script>
     <script src="../js/apply.js"></script>
 </body>
