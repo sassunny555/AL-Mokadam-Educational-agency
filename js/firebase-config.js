@@ -83,8 +83,7 @@ async function uploadFileToStorage(file, path) {
         }
         const ref = storage.ref().child(path);
         const snapshot = await ref.put(file);
-        const url = await snapshot.ref.getDownloadURL();
-        return { path, url, name: file.name, size: file.size };
+        return { path, name: file.name, size: file.size };
     } catch (error) {
         console.error('Error uploading file:', error);
         throw error;
