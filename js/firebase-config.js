@@ -13,6 +13,9 @@ const firebaseConfig = {
     measurementId: "G-BBHSMZ4N3E"
 };
 
+// App Check (reCAPTCHA v3) - public site key
+const APP_CHECK_SITE_KEY = '6LfEvWIsAAAAAHFYfSpt2qtWpDI1ZEdCNUhNN_JP';
+
 // Initialize Firebase
 let app, db, auth, storage;
 
@@ -36,6 +39,11 @@ function initFirebase() {
         // Initialize Storage
         if (firebase.storage) {
             storage = firebase.storage();
+        }
+
+        // Initialize App Check (only if App Check SDK is loaded)
+        if (firebase.appCheck && APP_CHECK_SITE_KEY) {
+            firebase.appCheck().activate(APP_CHECK_SITE_KEY, true);
         }
         
         console.log('Firebase initialized successfully');
