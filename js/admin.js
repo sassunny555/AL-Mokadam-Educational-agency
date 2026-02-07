@@ -426,7 +426,7 @@ function openApplicationDrawer(appId) {
             const doc = entries[key];
             const label = key.replace(/([A-Z])/g, ' $1').trim();
             if (doc?.path) {
-                docs.innerHTML += `<li>${label}: <button class="btn btn-outline btn-compact" onclick="downloadApplicationFile('${doc.path}')">Download</button></li>`;
+                docs.innerHTML += `<li>${label}: <button class="btn btn-outline btn-compact" onclick="downloadApplicationFile('${doc.path}', '${key}', '${app.id}')">Download</button></li>`;
             } else {
                 docs.innerHTML += `<li>${label}: <code>N/A</code></li>`;
             }
@@ -436,12 +436,33 @@ function openApplicationDrawer(appId) {
     if (drawer) drawer.classList.add('open');
 }
 
-async function downloadApplicationFile(path) {
+async function downloadApplicationFile(path, key, appId) {
     try {
         if (!storage) throw new Error('Storage not initialized');
         const url = await storage.ref().child(path).getDownloadURL();
         window.open(url, '_blank');
     } catch (error) {
+        if (error?.code === 'storage/object-not-found' && appId) {
+            try {
+                const app = applicationsCache.find(a => a.id === appId);
+                const doc = app?.documents?.[key];
+                const prefixMap = {
+                    highSchool: 'high-school',
+                    photo: 'photo',
+                    passport: 'passport',
+                    additional: 'additional'
+                };
+                const prefix = prefixMap[key] || key;
+                if (app?.storageFolder && doc?.name) {
+                    const altPath = `${app.storageFolder}/${prefix}-${doc.name}`;
+                    const altUrl = await storage.ref().child(altPath).getDownloadURL();
+                    window.open(altUrl, '_blank');
+                    return;
+                }
+            } catch (altErr) {
+                console.error('Error with fallback download URL:', altErr);
+            }
+        }
         console.error('Error getting download URL:', error);
         alert('Unable to download file. Please try again.');
     }
