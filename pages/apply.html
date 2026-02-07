@@ -403,6 +403,90 @@
             color: #fecaca;
         }
 
+        .submit-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(220, 38, 38, 0.12), transparent 40%),
+                        rgba(15, 23, 42, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .submit-card {
+            background: var(--apply-surface);
+            border-radius: 20px;
+            padding: 28px 26px 24px;
+            width: min(440px, 92vw);
+            border: 1px solid var(--apply-border);
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+            text-align: center;
+            position: relative;
+        }
+
+        .submit-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #22c55e;
+            color: #fff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin: -54px auto 14px;
+            box-shadow: 0 10px 24px rgba(34, 197, 94, 0.35);
+        }
+
+        .submit-card h4 {
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+
+        [data-theme="dark"] .submit-card h4 {
+            color: #f8fafc;
+        }
+
+        .submit-card p {
+            color: var(--apply-muted);
+            font-size: 0.92rem;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            border-radius: 999px;
+            background: #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        [data-theme="dark"] .progress-bar {
+            background: #1e293b;
+        }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--apply-muted);
+            margin-bottom: 8px;
+        }
+
+        .submit-actions {
+            display: none;
+            margin-top: 16px;
+        }
+
         .btn-secondary {
             background: transparent;
             border: 1px solid var(--apply-border);
@@ -580,7 +664,23 @@
                         </div>
                         <div class="form-group">
                             <label>Parent/Guardian’s Contact Number</label>
-                            <input type="tel" id="guardianPhone" placeholder="Enter Parent/Guardian’s contact no.">
+                            <div class="phone-group">
+                                <select id="guardianPhoneCode">
+                                    <option value="+60">Malaysia (+60)</option>
+                                    <option value="+880">Bangladesh (+880)</option>
+                                    <option value="+92">Pakistan (+92)</option>
+                                    <option value="+91">India (+91)</option>
+                                    <option value="+234">Nigeria (+234)</option>
+                                    <option value="+966">Saudi Arabia (+966)</option>
+                                    <option value="+971">United Arab Emirates (+971)</option>
+                                    <option value="+1">United States (+1)</option>
+                                    <option value="+44">United Kingdom (+44)</option>
+                                    <option value="+61">Australia (+61)</option>
+                                    <option value="+65">Singapore (+65)</option>
+                                    <option value="+62">Indonesia (+62)</option>
+                                </select>
+                                <input type="tel" id="guardianPhone" placeholder="Enter Parent/Guardian’s contact no." inputmode="numeric" pattern="[0-9]*" oninput="sanitizePhone(this)">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Country</label>
@@ -658,6 +758,19 @@
                     </button>
                 </div>
                 <div class="form-warning" id="formWarning"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="submit-overlay" id="submitOverlay">
+        <div class="submit-card">
+            <div class="submit-icon" id="submitIcon">✓</div>
+            <h4 id="submitTitle">Submitting your application</h4>
+            <p id="submitMessage">Please do not close this tab while we upload your documents.</p>
+            <div class="progress-bar"><span id="submitProgress"></span></div>
+            <div class="progress-text" id="submitPercent">0% completed</div>
+            <div class="submit-actions" id="submitActions">
+                <button class="btn btn-primary" type="button" onclick="window.location.href='../index.html'">OK</button>
             </div>
         </div>
     </div>

@@ -146,7 +146,7 @@ async function uploadIfPresent(file, path) {
 async function submitApplication() {
     const consent = document.getElementById('consentCheck');
     if (!consent?.checked) {
-        alert('Please agree to the terms & conditions before submitting.');
+        showWarning('Please agree to the terms & conditions before submitting.');
         return;
     }
     if (!validatePhone()) return;
@@ -166,6 +166,7 @@ async function submitApplication() {
         name: document.getElementById('guardianName').value.trim(),
         email: document.getElementById('guardianEmail').value.trim(),
         phone: document.getElementById('guardianPhone').value.trim(),
+        phoneCode: document.getElementById('guardianPhoneCode').value,
         country: document.getElementById('guardianCountry').value
     };
 
@@ -185,12 +186,26 @@ async function submitApplication() {
     const basePath = `applications/${applicationId}-${studentSlug}-${uniSlug}-${today}/${timestamp}`;
 
     try {
+        showSubmitOverlay();
+        const presentFiles = Object.values(files).filter(Boolean).length;
+        const totalSteps = presentFiles + 1; // files + Firestore write
+        let completed = 0;
+        const nextProgress = () => {
+            completed += 1;
+            const percent = Math.min(95, Math.round((completed / totalSteps) * 100));
+            updateSubmitProgress(percent);
+        };
+
         const uploaded = {
             highSchool: await uploadIfPresent(files.highSchool, `${basePath}/high-school-${files.highSchool?.name || 'file'}`),
             photo: await uploadIfPresent(files.photo, `${basePath}/photo-${files.photo?.name || 'file'}`),
             passport: await uploadIfPresent(files.passport, `${basePath}/passport-${files.passport?.name || 'file'}`),
             additional: await uploadIfPresent(files.additional, `${basePath}/additional-${files.additional?.name || 'file'}`)
         };
+        if (files.highSchool) nextProgress();
+        if (files.photo) nextProgress();
+        if (files.passport) nextProgress();
+        if (files.additional) nextProgress();
 
         const application = {
             id: applicationId,
@@ -205,11 +220,14 @@ async function submitApplication() {
         };
 
         await applicationRef.set(application);
-        alert('Application submitted successfully! Our team will contact you soon.');
-        window.location.href = '../index.html';
+        nextProgress();
+        updateSubmitProgress(100);
+        clearWarning();
+        showSubmitSuccess();
     } catch (error) {
         console.error('Submission error:', error);
-        alert('There was an error submitting your application. Please try again.');
+        showWarning('There was an error submitting your application. Please try again.');
+        hideSubmitOverlay();
     }
 }
 
@@ -285,6 +303,46 @@ function clearWarning() {
     if (!warning) return;
     warning.textContent = '';
     warning.style.display = 'none';
+}
+
+function showSubmitOverlay() {
+    const overlay = document.getElementById('submitOverlay');
+    const bar = document.getElementById('submitProgress');
+    const title = document.getElementById('submitTitle');
+    const message = document.getElementById('submitMessage');
+    const percent = document.getElementById('submitPercent');
+    const icon = document.getElementById('submitIcon');
+    const actions = document.getElementById('submitActions');
+    if (overlay) overlay.style.display = 'flex';
+    if (bar) bar.style.width = '5%';
+    if (title) title.textContent = 'Submitting your application';
+    if (message) message.textContent = 'Please do not close this tab while we upload your documents.';
+    if (percent) percent.textContent = '0% completed';
+    if (icon) icon.style.display = 'none';
+    if (actions) actions.style.display = 'none';
+}
+
+function updateSubmitProgress(percent) {
+    const bar = document.getElementById('submitProgress');
+    const label = document.getElementById('submitPercent');
+    if (bar) bar.style.width = `${percent}%`;
+    if (label) label.textContent = `${percent}% completed`;
+}
+
+function hideSubmitOverlay() {
+    const overlay = document.getElementById('submitOverlay');
+    if (overlay) overlay.style.display = 'none';
+}
+
+function showSubmitSuccess() {
+    const title = document.getElementById('submitTitle');
+    const message = document.getElementById('submitMessage');
+    const icon = document.getElementById('submitIcon');
+    const actions = document.getElementById('submitActions');
+    if (title) title.textContent = 'Thank you!';
+    if (message) message.textContent = 'Your details have been successfully submitted. Our team will contact you soon.';
+    if (icon) icon.style.display = 'flex';
+    if (actions) actions.style.display = 'block';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
