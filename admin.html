@@ -61,6 +61,11 @@
                     <span class="nav-icon"><i class="bi bi-graph-up"></i></span>
                     Dashboard
                 </a>
+                <a href="#" class="nav-item" data-section="applications">
+                    <span class="nav-icon"><i class="bi bi-file-earmark-text"></i></span>
+                    Applications
+                    <span class="badge" id="applicationsBadge">0</span>
+                </a>
                 <a href="#" class="nav-item" data-section="courses">
                     <span class="nav-icon"><i class="bi bi-journal-bookmark"></i></span>
                     Courses
@@ -301,6 +306,82 @@
                     </div>
                 </section>
 
+                <!-- Applications Section -->
+                <section id="applicationsSection" class="content-section">
+                    <div class="section-header-admin">
+                        <h3>Student Applications</h3>
+                        <div class="header-btns">
+                            <button class="btn btn-compact btn-info" onclick="exportApplicationsCsv()">Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="admin-filters">
+                        <div class="filter-group">
+                            <label>Search</label>
+                            <input type="text" id="appSearch" placeholder="Search name, email, university...">
+                        </div>
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="appStatusFilter">
+                                <option value="all">All</option>
+                                <option value="new">New</option>
+                                <option value="contacted">Contacted</option>
+                                <option value="applied">Applied</option>
+                                <option value="offer">Offer</option>
+                                <option value="enrolled">Enrolled</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>University</label>
+                            <select id="appUniversityFilter">
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Course</label>
+                            <select id="appCourseFilter">
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Date</label>
+                            <div class="date-range">
+                                <input type="date" id="appDateFrom">
+                                <input type="date" id="appDateTo">
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label>Sort</label>
+                            <select id="appSort">
+                                <option value="newest">Newest</option>
+                                <option value="oldest">Oldest</option>
+                                <option value="status">Status</option>
+                                <option value="university">University</option>
+                                <option value="course">Course</option>
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="btn btn-primary" onclick="applyApplicationFilters()">Apply</button>
+                            <button class="btn btn-outline" onclick="resetApplicationFilters()">Reset</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="applicationsTable">
+                            <thead>
+                                <tr>
+                                    <th>Applicant</th>
+                                    <th>University</th>
+                                    <th>Programme</th>
+                                    <th>Status</th>
+                                    <th>Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+
                 <!-- Settings Section -->
                 <section id="settingsSection" class="content-section">
                     <div class="section-header-admin">
@@ -370,6 +451,57 @@
         </main>
     </div>
 
+    <!-- Application Detail Drawer -->
+    <div class="detail-drawer" id="applicationDrawer">
+        <div class="detail-header">
+            <div>
+                <h3 id="drawerTitle">Application</h3>
+                <p id="drawerSubtitle"></p>
+            </div>
+            <button class="btn btn-outline" onclick="closeApplicationDrawer()">Close</button>
+        </div>
+        <div class="detail-body">
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <h4>Student</h4>
+                    <p id="detailStudent"></p>
+                    <p id="detailContact"></p>
+                    <p id="detailLocation"></p>
+                </div>
+                <div class="detail-card">
+                    <h4>Guardian</h4>
+                    <p id="detailGuardian"></p>
+                    <p id="detailGuardianContact"></p>
+                </div>
+                <div class="detail-card">
+                    <h4>Application</h4>
+                    <p id="detailUniversity"></p>
+                    <p id="detailProgramme"></p>
+                    <div class="status-select">
+                        <label>Status</label>
+                        <select id="detailStatus" onchange="updateApplicationStatus()">
+                            <option value="new">New</option>
+                            <option value="contacted">Contacted</option>
+                            <option value="applied">Applied</option>
+                            <option value="offer">Offer</option>
+                            <option value="enrolled">Enrolled</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <h4>Documents</h4>
+                    <ul id="detailDocuments"></ul>
+                </div>
+            </div>
+            <div class="detail-notes">
+                <h4>Notes</h4>
+                <textarea id="detailNotes" placeholder="Add internal notes..."></textarea>
+                <button class="btn btn-primary" onclick="saveApplicationNotes()">Save Notes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for Add/Edit -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
@@ -387,6 +519,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"></script>
     
     <script src="js/firebase-config.js"></script>
     <script src="js/admin.js"></script>

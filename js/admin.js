@@ -26,6 +26,20 @@ let editingType = null;
 let availableCourses = [];
 let availableCategories = ['IT', 'Engineering', 'Business', 'Health Sciences', 'Arts', 'Science', 'Law', 'Education', 'Other'];
 let universityCoursesTemp = []; // Temporary storage for courses being added to university
+let applicationsCache = [];
+let selectedApplicationId = null;
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
 // ============================================
 // Authentication
@@ -80,6 +94,17 @@ function setupEventListeners() {
     
     const inquiryFilter = document.getElementById('inquiryFilter');
     if (inquiryFilter) inquiryFilter.addEventListener('change', () => loadInquiries());
+
+    const appSearch = document.getElementById('appSearch');
+    if (appSearch) appSearch.addEventListener('input', debounce(applyApplicationFilters, 300));
+    const appStatusFilter = document.getElementById('appStatusFilter');
+    if (appStatusFilter) appStatusFilter.addEventListener('change', applyApplicationFilters);
+    const appUniversityFilter = document.getElementById('appUniversityFilter');
+    if (appUniversityFilter) appUniversityFilter.addEventListener('change', applyApplicationFilters);
+    const appCourseFilter = document.getElementById('appCourseFilter');
+    if (appCourseFilter) appCourseFilter.addEventListener('change', applyApplicationFilters);
+    const appSort = document.getElementById('appSort');
+    if (appSort) appSort.addEventListener('change', applyApplicationFilters);
 }
 
 async function handleEmailLogin(e) {
@@ -191,6 +216,7 @@ function switchSection(section) {
         testimonials: 'Testimonials',
         services: 'Services',
         inquiries: 'Inquiries',
+        applications: 'Applications',
         settings: 'Settings'
     };
     document.getElementById('sectionTitle').textContent = titles[section] || section;
@@ -210,6 +236,7 @@ function loadSectionData(section) {
         case 'testimonials': loadTestimonials(); break;
         case 'services': loadServices(); break;
         case 'inquiries': loadInquiries(); break;
+        case 'applications': loadApplications(); break;
         case 'settings': loadSettings(); break;
     }
 }
@@ -220,11 +247,12 @@ function loadSectionData(section) {
 
 async function loadDashboard() {
     try {
-        const [inquiries, courses, universities, team] = await Promise.all([
+        const [inquiries, courses, universities, team, applications] = await Promise.all([
             db.collection('inquiries').where('status', '==', 'new').get(),
             db.collection('courses').get(),
             db.collection('universities').get(),
-            db.collection('team').get()
+            db.collection('team').get(),
+            db.collection('applications').where('status', '==', 'new').get()
         ]);
         
         document.getElementById('statInquiries').textContent = inquiries.size;
@@ -232,6 +260,8 @@ async function loadDashboard() {
         document.getElementById('statUniversities').textContent = universities.size;
         document.getElementById('statTeam').textContent = team.size;
         document.getElementById('inquiryBadge').textContent = inquiries.size;
+        const applicationsBadge = document.getElementById('applicationsBadge');
+        if (applicationsBadge) applicationsBadge.textContent = applications.size;
         
         const recentSnapshot = await db.collection('inquiries').orderBy('createdAt', 'desc').limit(5).get();
         const tbody = document.querySelector('#recentInquiriesTable tbody');
@@ -258,6 +288,223 @@ async function loadDashboard() {
     } catch (error) {
         console.error('Error loading dashboard:', error);
     }
+}
+
+// ============================================
+// Applications
+// ============================================
+
+async function loadApplications() {
+    try {
+        const snapshot = await db.collection('applications').orderBy('createdAt', 'desc').get();
+        applicationsCache = [];
+        snapshot.forEach(doc => {
+            applicationsCache.push({ id: doc.id, ...doc.data() });
+        });
+        populateApplicationFilters(applicationsCache);
+        renderApplications(applicationsCache);
+    } catch (error) {
+        console.error('Error loading applications:', error);
+    }
+}
+
+function populateApplicationFilters(apps) {
+    const uniSelect = document.getElementById('appUniversityFilter');
+    const courseSelect = document.getElementById('appCourseFilter');
+    if (!uniSelect || !courseSelect) return;
+    const universities = [...new Set(apps.map(a => a.universityName).filter(Boolean))].sort();
+    const courses = [...new Set(apps.map(a => a.student?.programmeName || a.student?.programmeLabel || a.student?.programme).filter(Boolean))].sort();
+    uniSelect.innerHTML = '<option value="all">All</option>' + universities.map(u => `<option value="${u}">${u}</option>`).join('');
+    courseSelect.innerHTML = '<option value="all">All</option>' + courses.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function renderApplications(apps) {
+    const tbody = document.querySelector('#applicationsTable tbody');
+    if (!tbody) return;
+    if (apps.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No applications found.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = '';
+    apps.forEach(app => {
+        const date = app.createdAt?.toDate ? app.createdAt.toDate().toLocaleDateString() : 'N/A';
+        const studentName = app.student?.name || 'N/A';
+        const studentEmail = app.student?.email || 'N/A';
+        const programme = app.student?.programmeLabel || app.student?.programmeName || app.student?.programme || 'N/A';
+        tbody.innerHTML += `
+            <tr>
+                <td><strong>${studentName}</strong><br><span style="color:#64748b;font-size:0.8rem;">${studentEmail}</span></td>
+                <td>${app.universityName || 'N/A'}</td>
+                <td>${programme}</td>
+                <td><span class="status status-${app.status || 'new'}">${app.status || 'new'}</span></td>
+                <td>${date}</td>
+                <td class="action-btns">
+                    <button class="btn-view" onclick="openApplicationDrawer('${app.id}')">View</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function applyApplicationFilters() {
+    const search = document.getElementById('appSearch')?.value.toLowerCase().trim() || '';
+    const status = document.getElementById('appStatusFilter')?.value || 'all';
+    const uni = document.getElementById('appUniversityFilter')?.value || 'all';
+    const course = document.getElementById('appCourseFilter')?.value || 'all';
+    const dateFrom = document.getElementById('appDateFrom')?.value || '';
+    const dateTo = document.getElementById('appDateTo')?.value || '';
+    const sort = document.getElementById('appSort')?.value || 'newest';
+
+    let filtered = applicationsCache.filter(app => {
+        const hay = `${app.student?.name || ''} ${app.student?.email || ''} ${app.universityName || ''} ${app.student?.programme || ''}`.toLowerCase();
+        if (search && !hay.includes(search)) return false;
+        if (status !== 'all' && (app.status || 'new') !== status) return false;
+        if (uni !== 'all' && app.universityName !== uni) return false;
+        const programme = app.student?.programmeLabel || app.student?.programmeName || app.student?.programme || '';
+        if (course !== 'all' && programme !== course) return false;
+        if (dateFrom || dateTo) {
+            const created = app.createdAt?.toDate ? app.createdAt.toDate() : null;
+            if (!created) return false;
+            if (dateFrom && created < new Date(dateFrom)) return false;
+            if (dateTo && created > new Date(dateTo)) return false;
+        }
+        return true;
+    });
+
+    filtered.sort((a, b) => {
+        const aDate = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+        const bDate = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+        switch (sort) {
+            case 'oldest': return aDate - bDate;
+            case 'status': return (a.status || '').localeCompare(b.status || '');
+            case 'university': return (a.universityName || '').localeCompare(b.universityName || '');
+            case 'course': {
+                const ac = a.student?.programme || '';
+                const bc = b.student?.programme || '';
+                return ac.localeCompare(bc);
+            }
+            default: return bDate - aDate;
+        }
+    });
+
+    renderApplications(filtered);
+}
+
+function resetApplicationFilters() {
+    const ids = ['appSearch','appStatusFilter','appUniversityFilter','appCourseFilter','appDateFrom','appDateTo','appSort'];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.tagName === 'INPUT') el.value = '';
+        else el.value = id === 'appSort' ? 'newest' : 'all';
+    });
+    renderApplications(applicationsCache);
+}
+
+function openApplicationDrawer(appId) {
+    selectedApplicationId = appId;
+    const app = applicationsCache.find(a => a.id === appId);
+    if (!app) return;
+    const drawer = document.getElementById('applicationDrawer');
+    const name = app.student?.name || 'Applicant';
+    document.getElementById('drawerTitle').textContent = name;
+    document.getElementById('drawerSubtitle').textContent = app.student?.email || '';
+    document.getElementById('detailStudent').textContent = `${app.student?.name || ''} • ${app.student?.nationality || 'N/A'}`;
+    document.getElementById('detailContact').textContent = `${app.student?.phoneCode || ''} ${app.student?.phone || ''} • ${app.student?.email || ''}`;
+    document.getElementById('detailLocation').textContent = `${app.student?.city || ''} ${app.student?.country ? '• ' + app.student.country : ''}`;
+    document.getElementById('detailGuardian').textContent = `${app.guardian?.name || 'N/A'} • ${app.guardian?.email || ''}`;
+    document.getElementById('detailGuardianContact').textContent = `${app.guardian?.phoneCode || ''} ${app.guardian?.phone || ''}`;
+    document.getElementById('detailUniversity').textContent = app.universityName || 'N/A';
+    document.getElementById('detailProgramme').textContent = app.student?.programmeLabel || app.student?.programme || 'N/A';
+    const statusSelect = document.getElementById('detailStatus');
+    if (statusSelect) statusSelect.value = app.status || 'new';
+    const docs = document.getElementById('detailDocuments');
+    if (docs) {
+        docs.innerHTML = '';
+        const entries = app.documents || {};
+        Object.keys(entries).forEach(key => {
+            const doc = entries[key];
+            const label = key.replace(/([A-Z])/g, ' $1').trim();
+            if (doc?.path) {
+                docs.innerHTML += `<li>${label}: <button class="btn btn-outline btn-compact" onclick="downloadApplicationFile('${doc.path}')">Download</button></li>`;
+            } else {
+                docs.innerHTML += `<li>${label}: <code>N/A</code></li>`;
+            }
+        });
+    }
+    document.getElementById('detailNotes').value = app.notes || '';
+    if (drawer) drawer.classList.add('open');
+}
+
+async function downloadApplicationFile(path) {
+    try {
+        if (!storage) throw new Error('Storage not initialized');
+        const url = await storage.ref().child(path).getDownloadURL();
+        window.open(url, '_blank');
+    } catch (error) {
+        console.error('Error getting download URL:', error);
+        alert('Unable to download file. Please try again.');
+    }
+}
+
+function closeApplicationDrawer() {
+    const drawer = document.getElementById('applicationDrawer');
+    if (drawer) drawer.classList.remove('open');
+    selectedApplicationId = null;
+}
+
+async function updateApplicationStatus() {
+    if (!selectedApplicationId) return;
+    const status = document.getElementById('detailStatus').value;
+    try {
+        await updateDocument('applications', selectedApplicationId, { status });
+        const app = applicationsCache.find(a => a.id === selectedApplicationId);
+        if (app) app.status = status;
+        applyApplicationFilters();
+    } catch (error) {
+        console.error('Error updating application status:', error);
+    }
+}
+
+async function saveApplicationNotes() {
+    if (!selectedApplicationId) return;
+    const notes = document.getElementById('detailNotes').value;
+    try {
+        await updateDocument('applications', selectedApplicationId, { notes });
+        const app = applicationsCache.find(a => a.id === selectedApplicationId);
+        if (app) app.notes = notes;
+        alert('Notes saved');
+    } catch (error) {
+        console.error('Error saving notes:', error);
+        alert('Error saving notes');
+    }
+}
+
+function exportApplicationsCsv() {
+    if (!applicationsCache.length) return;
+    const rows = [
+        ['Name','Email','University','Programme','Status','Date']
+    ];
+    applicationsCache.forEach(app => {
+        const date = app.createdAt?.toDate ? app.createdAt.toDate().toISOString() : '';
+        rows.push([
+            app.student?.name || '',
+            app.student?.email || '',
+            app.universityName || '',
+            app.student?.programme || '',
+            app.status || '',
+            date
+        ]);
+    });
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'applications.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // ============================================
