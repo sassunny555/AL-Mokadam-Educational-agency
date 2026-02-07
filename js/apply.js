@@ -151,6 +151,7 @@ async function submitApplication() {
     }
     if (!validatePhone()) return;
 
+    const programmeSelect = document.getElementById('studentProgramme');
     const student = {
         name: document.getElementById('studentName').value.trim(),
         nationality: document.getElementById('studentNationality').value,
@@ -159,7 +160,8 @@ async function submitApplication() {
         phone: document.getElementById('studentPhone').value.trim(),
         phoneCode: document.getElementById('studentPhoneCode').value,
         city: document.getElementById('studentCity').value.trim(),
-        programme: document.getElementById('studentProgramme').value
+        programmeId: programmeSelect?.value || '',
+        programme: programmeSelect?.options?.[programmeSelect.selectedIndex]?.text || ''
     };
 
     const guardian = {
