@@ -180,7 +180,9 @@ async function submitApplication() {
     const studentSlug = slugify(student.name);
     const uniSlug = slugify(selectedUniversity?.name || selectedUniversity?.shortCode || 'unknown-university');
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const basePath = `applications/${studentSlug}-${uniSlug}-${today}/${timestamp}`;
+    const applicationRef = db.collection('applications').doc();
+    const applicationId = applicationRef.id;
+    const basePath = `applications/${applicationId}-${studentSlug}-${uniSlug}-${today}/${timestamp}`;
 
     try {
         const uploaded = {
@@ -191,16 +193,18 @@ async function submitApplication() {
         };
 
         const application = {
+            id: applicationId,
             universityId: selectedUniversity?.id || null,
             universityName: selectedUniversity?.name || null,
             student,
             guardian,
             documents: uploaded,
+            storageFolder: basePath,
             status: 'new',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        await addDocument('applications', application);
+        await applicationRef.set(application);
         alert('Application submitted successfully! Our team will contact you soon.');
         window.location.href = '../index.html';
     } catch (error) {
