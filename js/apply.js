@@ -87,6 +87,17 @@ function sanitizePhone(input) {
     input.value = input.value.replace(/\D/g, '');
 }
 
+function slugify(value) {
+    return (value || '')
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60) || 'unknown';
+}
+
 async function loadUniversity() {
     const uniId = getQueryParam('uni') || getQueryParam('id');
     const headerEl = document.getElementById('applyHeader');
@@ -165,8 +176,11 @@ async function submitApplication() {
         additional: document.getElementById('docAdditional').files[0] || null
     };
 
+    const today = new Date().toISOString().slice(0, 10);
+    const studentSlug = slugify(student.name);
+    const uniSlug = slugify(selectedUniversity?.name || selectedUniversity?.shortCode || 'unknown-university');
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const basePath = `applications/${selectedUniversity?.id || 'general'}/${timestamp}`;
+    const basePath = `applications/${studentSlug}-${uniSlug}-${today}/${timestamp}`;
 
     try {
         const uploaded = {

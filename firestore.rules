@@ -53,6 +53,15 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // ========================================
+    // APPLICATIONS (Student Submissions)
+    // Anyone can submit, only admins can read/modify
+    // ========================================
+    match /applications/{document} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
     
     // ========================================
     // INQUIRIES (Contact Form Submissions)
