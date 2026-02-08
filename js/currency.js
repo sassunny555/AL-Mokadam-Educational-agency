@@ -168,7 +168,7 @@
 
         const icon = document.createElement('span');
         icon.className = 'currency-icon';
-        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.754 4.5a.5.5 0 0 0-.5-.5h-7.5a.5.5 0 0 0 0 1h6.293l-1.4 1.4a.5.5 0 1 0 .707.707l2.247-2.247a.5.5 0 0 0 .001-.706z"/><path d="M4.246 11.5a.5.5 0 0 0 .5.5h7.5a.5.5 0 0 0 0-1H5.953l1.4-1.4a.5.5 0 1 0-.707-.707L4.399 11.14a.5.5 0 0 0-.001.706z"/></svg>';
+        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13"/><path d="m14 4 3 3-3 3"/><path d="M20 17H7"/><path d="m10 14-3 3 3 3"/></svg>';
 
         const select = document.createElement('select');
         select.id = 'currencySelect';

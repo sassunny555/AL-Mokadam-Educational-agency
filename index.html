@@ -3,46 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AL-Mokadam Educational Agency - Your trusted partner for enrolling in Malaysian universities. Free consultation, visa assistance, accommodation, and more.">
+    <meta name="description" content="AL-Mokadam Educational Agency - Your trusted partner for enrolling in Malaysian universities.">
     <meta name="keywords" content="study in Malaysia, Malaysian universities, education agency, international students, visa assistance">
     <title>AL-Mokadam Educational Agency | Study in Malaysia</title>
-    
-    <!-- Favicon -->
+
     <link rel="icon" type="image/png" href="assets/images/logo.png">
-    
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <!-- Navigation -->
+<body class="home-page">
     <nav class="navbar" id="navbar">
         <div class="container">
             <a href="#" class="nav-logo">
                 <img src="assets/images/logo.png" alt="AL-Mokadam Logo">
                 <span>AL-Mokadam</span>
             </a>
-            
+
             <ul class="nav-links" id="navLinks">
-                <li><a href="pages/services.html">Services</a></li>
+                <li><a href="#services">Services</a></li>
                 <li><a href="pages/universities.html">Universities</a></li>
                 <li><a href="pages/courses.html">Courses</a></li>
                 <li><a href="#testimonials">Success Stories</a></li>
                 <li><a href="#team">Our Team</a></li>
                 <li><a href="pages/contact.html">Contact</a></li>
             </ul>
-            
+
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </button>
-            
+
             <div class="nav-cta">
                 <a href="#contact" class="btn btn-primary">Get Started</a>
             </div>
-            
+
             <div class="nav-toggle" id="navToggle">
                 <span></span>
                 <span></span>
@@ -51,469 +46,259 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-        <!-- Curved Background -->
-        <div class="hero-bg">
-            <img src="assets/images2/images002.png" alt="" class="hero-bg-image">
-        </div>
-        
+    <section class="home-hero" id="hero">
         <div class="container">
-            <div class="hero-grid">
-                <div class="hero-content">
-                    <h1>Begin Your<br><span class="highlight">Global Education</span><br>Journey Today</h1>
-                    <p class="hero-description">
-                        Expert guidance for international students seeking quality education in Malaysia. Free consultation, visa support, and complete enrollment assistance.
-                    </p>
+            <div class="home-hero-card reveal">
+                <img class="hero-cover" src="assets/HomePage/hero_section.jpg" alt="Students starting their study abroad journey">
+                <img class="hero-gradient" src="assets/HomePage/gradient.svg" alt="">
+                <div class="hero-overlay"></div>
+                <div class="hero-content-wrap">
+                    <h1>Study abroad is closer than you think</h1>
+                    <p>From course selection to campus arrival, we guide every step with practical support and real outcomes.</p>
                     <div class="hero-buttons">
-                        <a href="#contact" class="btn btn-white">Start Free Consultation</a>
-                        <a href="#services" class="btn btn-outline-white">Explore Services</a>
+                        <a href="#contact" class="btn btn-hero-primary cta-pill"><span>Start your journey</span><span class="cta-arrow" aria-hidden="true"></span></a>
+                        <a href="#services" class="btn btn-hero-ghost">Explore services</a>
                     </div>
-                </div>
-                
-                <div class="hero-image">
-                    <img src="assets/images2/images003.png" alt="Student studying abroad" class="hero-student">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="section services" id="services">
+    <section class="home-about section" id="why-malaysia">
         <div class="container">
-            <div class="section-header reveal">
-                <span class="subtitle">What We Offer</span>
-                <h2>Our Services</h2>
-                <p>We provide comprehensive support to make your journey to studying in Malaysia smooth and stress-free.</p>
+            <div class="about-grid">
+                <div class="about-copy reveal">
+                    <span class="home-pill">About us</span>
+                    <h2>Hello, We are AL-Mokadam</h2>
+                    <p>Since 2007, we have helped students move from planning to enrollment with expert counseling, admissions support, and visa guidance.</p>
+                    <div class="about-stats stagger-reveal">
+                        <article class="stat-card">
+                            <span class="stat-index">001</span>
+                            <h3 class="stat-number">18</h3>
+                            <p>Years of experience</p>
+                        </article>
+                        <article class="stat-card">
+                            <span class="stat-index">002</span>
+                            <h3 class="stat-number">230</h3>
+                            <p>University partners</p>
+                        </article>
+                        <article class="stat-card stat-wide">
+                            <span class="stat-index">003</span>
+                            <h3 class="stat-number">9500</h3>
+                            <p>Students successfully recruited</p>
+                        </article>
+                    </div>
+                </div>
+                <div class="about-image reveal">
+                    <img src="assets/HomePage/Hello we are al mokaddam.avif" alt="Student planning education abroad">
+                </div>
             </div>
-            
+        </div>
+    </section>
+
+    <section class="section home-services" id="services">
+        <div class="container">
+            <div class="split-header reveal">
+                <div>
+                    <span class="home-pill">What we do</span>
+                    <h2>Services for students</h2>
+                </div>
+                <p>Everything needed to move from your first consultation to your first day on campus.</p>
+            </div>
             <div class="services-grid stagger-reveal">
-                <div class="service-card glass-card">
-                    <div class="service-icon">💬</div>
-                    <h3>Free Consultation</h3>
-                    <p>Get expert guidance on choosing the perfect course and university based on your interests, eligibility, and budget.</p>
-                </div>
-                
-                <div class="service-card glass-card">
-                    <div class="service-icon">📋</div>
-                    <h3>University Admission & Visa</h3>
-                    <p>We handle all admission procedures and visa applications, ensuring all your documents are properly submitted.</p>
-                </div>
-                
-                <div class="service-card glass-card">
-                    <div class="service-icon">🏠</div>
-                    <h3>Accommodation Assistance</h3>
-                    <p>We arrange comfortable and affordable accommodation options near your university before you arrive.</p>
-                </div>
-                
-                <div class="service-card glass-card">
-                    <div class="service-icon">✈️</div>
-                    <h3>Airport Pickup</h3>
-                    <p>Our team will meet you at the airport and safely drive you to your accommodation upon arrival in Malaysia.</p>
-                </div>
+                <article class="service-card accent-blue">
+                    <div class="service-dot"></div>
+                    <h3>Student Counselling</h3>
+                    <p>Advisors evaluate your profile and shortlist realistic pathways based on goals and budget.</p>
+                </article>
+                <article class="service-card accent-red">
+                    <div class="service-dot"></div>
+                    <h3>University & Program Matching</h3>
+                    <p>We align your interests with suitable universities and programs for stronger admission outcomes.</p>
+                </article>
+                <article class="service-card accent-purple">
+                    <div class="service-dot"></div>
+                    <h3>Admission Processing</h3>
+                    <p>From document checks to application submission, we manage deadlines and quality control.</p>
+                </article>
+                <article class="service-card accent-yellow">
+                    <div class="service-dot"></div>
+                    <h3>Visa Application Guidance</h3>
+                    <p>Structured visa prep, interview readiness, and compliance support to reduce rejection risk.</p>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- Universities Section -->
-    <section class="section universities" id="universities">
+    <section class="section home-universities" id="universities">
         <div class="container">
-            <div class="section-header reveal">
-                <span class="subtitle">Our Partners</span>
-                <h2>Top Malaysian Universities</h2>
-                <p>We partner with Malaysia's most prestigious universities to offer you the best education opportunities.</p>
+            <div class="split-header reveal">
+                <div>
+                    <span class="home-pill">Partner network</span>
+                    <h2>Discover top-rated universities</h2>
+                </div>
+                <a href="pages/universities.html" class="btn btn-outline">View all</a>
             </div>
-            
             <div class="uni-grid stagger-reveal">
-                <a href="pages/university-detail.html?id=um" class="uni-card">
-                    <div class="uni-card-header">
-                        <div class="uni-logo">UM</div>
-                        <span class="uni-ranking-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            #60
-                        </span>
-                    </div>
-                    <h4>University of Malaya</h4>
-                    <p class="uni-location">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Kuala Lumpur
-                    </p>
-                    <div class="uni-card-actions">
-                        <span class="btn btn-outline">Apply Now</span>
-                    </div>
-                    <div class="uni-card-footer">
-                        <span class="uni-qs-label">World Ranking</span>
-                        <span class="uni-qs-rank">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            QS #60
-                        </span>
-                    </div>
-                </a>
-                
-                <a href="pages/university-detail.html?id=utm" class="uni-card">
-                    <div class="uni-card-header">
-                        <div class="uni-logo">UTM</div>
-                        <span class="uni-ranking-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            #188
-                        </span>
-                    </div>
-                    <h4>Universiti Teknologi Malaysia</h4>
-                    <p class="uni-location">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Johor Bahru
-                    </p>
-                    <div class="uni-card-actions">
-                        <span class="btn btn-outline">Apply Now</span>
-                    </div>
-                    <div class="uni-card-footer">
-                        <span class="uni-qs-label">World Ranking</span>
-                        <span class="uni-qs-rank">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            QS #188
-                        </span>
-                    </div>
-                </a>
-                
-                <a href="pages/university-detail.html?id=apu" class="uni-card">
-                    <div class="uni-card-header">
-                        <div class="uni-logo">APU</div>
-                        <span class="uni-ranking-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            #240
-                        </span>
-                    </div>
-                    <h4>Asia Pacific University</h4>
-                    <p class="uni-location">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Kuala Lumpur
-                    </p>
-                    <div class="uni-card-actions">
-                        <span class="btn btn-outline">Apply Now</span>
-                    </div>
-                    <div class="uni-card-footer">
-                        <span class="uni-qs-label">World Ranking</span>
-                        <span class="uni-qs-rank">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            QS #240
-                        </span>
-                    </div>
-                </a>
-                
                 <a href="pages/university-detail.html?id=upm" class="uni-card">
-                    <div class="uni-card-header">
-                        <div class="uni-logo">UPM</div>
-                        <span class="uni-ranking-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            #123
-                        </span>
-                    </div>
+                    <div class="uni-logo-wrap"><span>UPM</span></div>
                     <h4>Universiti Putra Malaysia</h4>
-                    <p class="uni-location">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Selangor
-                    </p>
-                    <div class="uni-card-actions">
-                        <span class="btn btn-outline">Apply Now</span>
-                    </div>
-                    <div class="uni-card-footer">
-                        <span class="uni-qs-label">World Ranking</span>
-                        <span class="uni-qs-rank">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            QS #123
-                        </span>
-                    </div>
+                    <p class="uni-location">Selangor, Malaysia</p>
+                </a>
+                <a href="pages/university-detail.html?id=utm" class="uni-card">
+                    <div class="uni-logo-wrap"><span>UTM</span></div>
+                    <h4>Universiti Teknologi Malaysia</h4>
+                    <p class="uni-location">Johor Bahru, Malaysia</p>
+                </a>
+                <a href="pages/university-detail.html?id=apu" class="uni-card">
+                    <div class="uni-logo-wrap"><span>APU</span></div>
+                    <h4>Asia Pacific University</h4>
+                    <p class="uni-location">Kuala Lumpur, Malaysia</p>
+                </a>
+                <a href="pages/university-detail.html?id=um" class="uni-card">
+                    <div class="uni-logo-wrap"><span>UM</span></div>
+                    <h4>University of Malaya</h4>
+                    <p class="uni-location">Kuala Lumpur, Malaysia</p>
                 </a>
             </div>
-            
-            <div style="text-align: center; margin-top: var(--space-xl);">
-                <a href="pages/universities.html" class="btn btn-primary">View All Universities</a>
-            </div>
         </div>
     </section>
 
-    <!-- Why Malaysia Section -->
-    <section class="section why-malaysia" id="why-malaysia">
+    <section class="section home-testimonials" id="testimonials">
         <div class="container">
-            <div class="why-grid">
-                <div class="why-image reveal">
-                    <img src="assets/images/malaysia-skyline.webp" alt="Kuala Lumpur Skyline">
+            <div class="split-header reveal">
+                <div>
+                    <span class="home-pill">Success stories</span>
+                    <h2>What our students say</h2>
                 </div>
-                
-                <div class="why-content reveal">
-                    <span class="subtitle">Why Choose Malaysia</span>
-                    <h2>The Perfect Study Destination</h2>
-                    <p>Malaysia offers a unique blend of quality education, cultural diversity, and affordable living costs, making it an ideal choice for international students.</p>
-                    
-                    <div class="why-list">
-                        <div class="why-item">
-                            <div class="why-item-icon">🎓</div>
-                            <div class="why-item-content">
-                                <h4>World-Class Education</h4>
-                                <p>Internationally recognized degrees and top-ranked universities.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="why-item">
-                            <div class="why-item-icon">💰</div>
-                            <div class="why-item-content">
-                                <h4>Affordable Living</h4>
-                                <p>Lower tuition fees and cost of living compared to Western countries.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="why-item">
-                            <div class="why-item-icon">🌍</div>
-                            <div class="why-item-content">
-                                <h4>Cultural Diversity</h4>
-                                <p>Experience a multicultural environment with students from around the world.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="why-item">
-                            <div class="why-item-icon">🗣️</div>
-                            <div class="why-item-content">
-                                <h4>English-Friendly</h4>
-                                <p>English is widely spoken and used as a medium of instruction.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <a href="#contact" class="btn btn-highlight cta-pill"><span>See more reviews</span><span class="cta-arrow" aria-hidden="true"></span></a>
             </div>
-        </div>
-    </section>
-
-    <!-- Courses Section -->
-    <section class="section courses" id="courses">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="subtitle">Fields of Study</span>
-                <h2>Popular Courses</h2>
-                <p>Explore a wide range of programs offered by Malaysian universities to find your perfect fit.</p>
-            </div>
-            
-            <div class="courses-grid stagger-reveal">
-                <div class="course-card glass-card">
-                    <div class="course-icon">💻</div>
-                    <h4>Computer Science & IT</h4>
-                    <p>Software engineering, AI, cybersecurity, and more</p>
-                </div>
-                
-                <div class="course-card glass-card">
-                    <div class="course-icon">🏥</div>
-                    <h4>Medicine & Health Sciences</h4>
-                    <p>Medical degrees, nursing, pharmacy, dentistry</p>
-                </div>
-                
-                <div class="course-card glass-card">
-                    <div class="course-icon">⚙️</div>
-                    <h4>Engineering</h4>
-                    <p>Mechanical, electrical, civil, chemical engineering</p>
-                </div>
-                
-                <div class="course-card glass-card">
-                    <div class="course-icon">📊</div>
-                    <h4>Business & Finance</h4>
-                    <p>MBA, accounting, economics, marketing</p>
-                </div>
-                
-                <div class="course-card glass-card">
-                    <div class="course-icon">🎨</div>
-                    <h4>Arts & Design</h4>
-                    <p>Graphic design, animation, fine arts, architecture</p>
-                </div>
-                
-                <div class="course-card glass-card">
-                    <div class="course-icon">🔬</div>
-                    <h4>Science & Research</h4>
-                    <p>Biology, chemistry, physics, environmental science</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="section testimonials" id="testimonials">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="subtitle">Success Stories</span>
-                <h2>What Our Students Say</h2>
-                <p>Hear from students who achieved their dreams with AL-Mokadam's guidance and support.</p>
-            </div>
-            
-            <div class="testimonials-slider">
-                <div class="testimonial-card glass-card">
-                    <div class="testimonial-content">
-                        <p>AL-Mokadam made my dream of studying in Malaysia a reality. They handled everything from university admission to visa processing. I couldn't be happier with my decision to study at UTM!</p>
-                    </div>
+            <div class="testimonial-layout stagger-reveal">
+                <article class="testimonial-card">
+                    <p>"I received my student permit quickly and the full process was clear from day one. The team handled details I did not even know I needed."</p>
                     <div class="testimonial-author">
-                        <img src="assets/images/team-member-1.webp" alt="Ahmed Khan">
-                        <div class="testimonial-author-info">
-                            <h4>Ahmed Khan</h4>
-                            <p>BSc Computer Science @ UTM</p>
+                        <img src="assets/images/team-member-1.webp" alt="Student review">
+                        <div>
+                            <h4>Nazmus Sakib</h4>
+                            <span>Brock University</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="testimonial-card glass-card">
-                    <div class="testimonial-content">
-                        <p>The team at AL-Mokadam was incredibly supportive throughout my application process. They helped me find the perfect course and even arranged my accommodation before I arrived.</p>
-                    </div>
+                </article>
+                <article class="testimonial-featured">
+                    <img src="assets/images/team-member-2.webp" alt="Student success story">
+                    <h3>Azharuddin Khan</h3>
+                    <span>University of Waikato, New Zealand</span>
+                </article>
+                <article class="testimonial-card">
+                    <p>"From university selection to accommodation support, every step felt organized. I always had quick responses when I needed help."</p>
                     <div class="testimonial-author">
-                        <img src="assets/images/team-member-2.webp" alt="Sarah Ahmed">
-                        <div class="testimonial-author-info">
-                            <h4>Sarah Ahmed</h4>
-                            <p>MBA @ Asia Pacific University</p>
+                        <img src="assets/images/testimonial-student.webp" alt="Student review">
+                        <div>
+                            <h4>Yeamim Hossain</h4>
+                            <span>University of Windsor</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="testimonial-card glass-card">
-                    <div class="testimonial-content">
-                        <p>From the first consultation to landing in Malaysia, AL-Mokadam was there every step of the way. Their airport pickup service made my arrival so smooth and welcoming!</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="assets/images/testimonial-student.webp" alt="Mohammed Ali">
-                        <div class="testimonial-author-info">
-                            <h4>Mohammed Ali</h4>
-                            <p>Engineering @ University of Malaya</p>
-                        </div>
-                    </div>
-                </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="section team" id="team">
+    <section class="section home-team" id="team">
         <div class="container">
-            <div class="section-header reveal">
-                <span class="subtitle">Meet Our Experts</span>
-                <h2>Our Counselors</h2>
-                <p>Our experienced team is dedicated to helping you achieve your educational goals in Malaysia.</p>
+            <div class="split-header reveal">
+                <div>
+                    <span class="home-pill">Our people</span>
+                    <h2>Counselors you can rely on</h2>
+                </div>
+                <p>Experienced advisors focused on practical outcomes and transparent communication.</p>
             </div>
-            
             <div class="team-grid stagger-reveal">
-                <div class="team-card glass-card">
-                    <div class="team-image">
-                        <img src="assets/images/team-member-1.webp" alt="Dr. Ahmad Mokadam">
-                    </div>
+                <article class="team-card">
+                    <img src="assets/images/team-member-1.webp" alt="Dr. Ahmad Mokadam">
                     <h4>Dr. Ahmad Mokadam</h4>
-                    <p class="role">Founder & Lead Counselor</p>
-                    <p>15+ years of experience in international education consulting.</p>
-                    <div class="team-social">
-                        <a href="#" aria-label="LinkedIn">💼</a>
-                        <a href="#" aria-label="Email">📧</a>
-                        <a href="#" aria-label="Phone">📱</a>
-                    </div>
-                </div>
-                
-                <div class="team-card glass-card">
-                    <div class="team-image">
-                        <img src="assets/images/team-member-2.webp" alt="Fatima Hassan">
-                    </div>
+                    <p>Founder & Lead Counselor</p>
+                </article>
+                <article class="team-card">
+                    <img src="assets/images/team-member-2.webp" alt="Fatima Hassan">
                     <h4>Fatima Hassan</h4>
-                    <p class="role">Senior Education Consultant</p>
-                    <p>Specializes in medical and engineering programs.</p>
-                    <div class="team-social">
-                        <a href="#" aria-label="LinkedIn">💼</a>
-                        <a href="#" aria-label="Email">📧</a>
-                        <a href="#" aria-label="Phone">📱</a>
-                    </div>
-                </div>
-                
-                <div class="team-card glass-card">
-                    <div class="team-image">
-                        <img src="assets/images/finance.webp" alt="Omar Khalid">
-                    </div>
+                    <p>Senior Education Consultant</p>
+                </article>
+                <article class="team-card">
+                    <img src="assets/images/finance.webp" alt="Omar Khalid">
                     <h4>Omar Khalid</h4>
-                    <p class="role">Visa & Admissions Specialist</p>
-                    <p>Expert in visa processing and university admissions.</p>
-                    <div class="team-social">
-                        <a href="#" aria-label="LinkedIn">💼</a>
-                        <a href="#" aria-label="Email">📧</a>
-                        <a href="#" aria-label="Phone">📱</a>
-                    </div>
-                </div>
+                    <p>Visa & Admissions Specialist</p>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="section cta">
+    <section class="section home-cta">
         <div class="container reveal">
-            <h2>Ready to Begin Your Journey?</h2>
-            <p>Take the first step towards your dream education in Malaysia. Contact us today for a free consultation!</p>
-            <a href="#contact" class="btn btn-primary">Get Free Consultation</a>
+            <h2>Get a <span>free counselling</span></h2>
+            <p>Find your ideal study destination, apply with confidence, and connect with expert guidance counselors.</p>
+            <a href="#contact" class="btn btn-highlight cta-pill"><span>Apply now</span><span class="cta-arrow" aria-hidden="true"></span></a>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="section contact" id="contact">
+    <section class="home-partners" aria-label="Partner institutions">
+        <div class="partners-track">
+            <span class="partner-pill">Royal Roads University</span>
+            <span class="partner-pill">FIC</span>
+            <span class="partner-pill">George Brown College</span>
+            <span class="partner-pill">Mount Saint Vincent University</span>
+            <span class="partner-pill">LaSalle College</span>
+            <span class="partner-pill">University of Calgary</span>
+            <span class="partner-pill">North Island College</span>
+            <span class="partner-pill">Western Sydney University</span>
+            <span class="partner-pill">Charles Sturt University</span>
+            <span class="partner-pill">Royal Roads University</span>
+            <span class="partner-pill">FIC</span>
+            <span class="partner-pill">George Brown College</span>
+            <span class="partner-pill">Mount Saint Vincent University</span>
+            <span class="partner-pill">LaSalle College</span>
+            <span class="partner-pill">University of Calgary</span>
+            <span class="partner-pill">North Island College</span>
+            <span class="partner-pill">Western Sydney University</span>
+            <span class="partner-pill">Charles Sturt University</span>
+        </div>
+    </section>
+
+    <section class="section home-contact" id="contact">
         <div class="container">
-            <div class="contact-grid">
-                <div class="contact-info reveal">
-                    <span class="subtitle">Get In Touch</span>
-                    <h3>Let's Start Your Journey</h3>
-                    <p>Have questions? Fill out the form and our team will get back to you within 24 hours.</p>
-                    
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <div class="contact-item-icon">📍</div>
-                            <div class="contact-item-content">
-                                <h4>Our Office</h4>
-                                <p>123 Education Street, Kuala Lumpur, Malaysia</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-item-icon">📧</div>
-                            <div class="contact-item-content">
-                                <h4>Email Us</h4>
-                                <p>info@al-mokadam.edu</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-item-icon">📞</div>
-                            <div class="contact-item-content">
-                                <h4>Call Us</h4>
-                                <p>+60 12-345-6789</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-item-icon">⏰</div>
-                            <div class="contact-item-content">
-                                <h4>Office Hours</h4>
-                                <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="contact-shell reveal">
+                <div class="contact-intro">
+                    <span class="home-pill">Get in touch</span>
+                    <h3>Start your journey with a free consultation</h3>
+                    <ul>
+                        <li>Email: info@al-mokadam.edu</li>
+                        <li>Phone: +60 12-345-6789</li>
+                        <li>Office hours: Mon-Fri, 9:00 AM - 6:00 PM</li>
+                    </ul>
                 </div>
-                
-                <div class="contact-form reveal" id="contactForm">
+                <div class="contact-form" id="contactForm">
                     <form id="inquiryForm">
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                            </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country of Origin</label>
+                                <input type="text" id="country" name="country" placeholder="Your country">
+                            </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="country">Country of Origin</label>
-                            <input type="text" id="country" name="country" placeholder="Your country">
-                        </div>
-                        
+
                         <div class="form-group">
                             <label for="interest">Interested Course</label>
                             <select id="interest" name="interest">
@@ -527,15 +312,15 @@
                                 <option value="other">Other</option>
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="message">Your Message</label>
                             <textarea id="message" name="message" placeholder="Tell us about your education goals..."></textarea>
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary">Send Inquiry</button>
+
+                        <button type="submit" class="btn btn-highlight">Send inquiry</button>
                     </form>
-                    
+
                     <div class="form-success" id="formSuccess">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -548,8 +333,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer home-footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
@@ -557,37 +341,19 @@
                         <img src="assets/images/logo.png" alt="AL-Mokadam Logo">
                         <span>AL-Mokadam</span>
                     </div>
-                    <p>Your trusted partner for education opportunities in Malaysia. We help international students achieve their academic dreams.</p>
-                    <div class="footer-social">
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="Twitter">🐦</a>
-                        <a href="#" aria-label="YouTube">📺</a>
-                    </div>
+                    <p>Your trusted partner for education opportunities in Malaysia. We help international students achieve their academic goals with confidence.</p>
                 </div>
-                
+
                 <div class="footer-links">
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="#services">Our Services</a></li>
                         <li><a href="#universities">Universities</a></li>
-                        <li><a href="#courses">Courses</a></li>
+                        <li><a href="pages/courses.html">Courses</a></li>
                         <li><a href="#testimonials">Success Stories</a></li>
-                        <li><a href="#contact">Contact Us</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-links">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="#">Study in Malaysia Guide</a></li>
-                        <li><a href="#">Visa Requirements</a></li>
-                        <li><a href="#">Cost of Living</a></li>
-                        <li><a href="#">Scholarship Info</a></li>
-                        <li><a href="#">Student Blog</a></li>
-                    </ul>
-                </div>
-                
+
                 <div class="footer-links">
                     <h4>Contact</h4>
                     <ul>
@@ -596,20 +362,28 @@
                         <li><a href="#">Kuala Lumpur, Malaysia</a></li>
                     </ul>
                 </div>
+
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="pages/services.html">Services</a></li>
+                        <li><a href="pages/universities.html">Universities</a></li>
+                        <li><a href="pages/contact.html">Contact</a></li>
+                        <li><a href="admin.html" style="opacity: 0.5;">Admin</a></li>
+                    </ul>
+                </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2026 AL-Mokadam Educational Agency. All Rights Reserved.</p>
                 <div class="footer-bottom-links">
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms & Conditions</a>
-                    <a href="admin.html" style="opacity: 0.4;">Admin</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script src="js/dark-mode.js"></script>
     <script src="js/currency.js"></script>
     <script src="js/main.js"></script>
