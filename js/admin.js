@@ -296,6 +296,9 @@ async function loadDashboard() {
 
 async function loadApplications() {
     try {
+        if (!availableCourses.length) {
+            await loadAvailableCourses();
+        }
         const snapshot = await db.collection('applications').orderBy('createdAt', 'desc').get();
         applicationsCache = [];
         snapshot.forEach(doc => {
@@ -308,12 +311,24 @@ async function loadApplications() {
     }
 }
 
+function getProgrammeDisplay(app) {
+    const label = app?.student?.programmeLabel || app?.student?.programmeName;
+    if (label) return label;
+    const raw = app?.student?.programme || '';
+    if (!raw) return 'N/A';
+    const directMatch = availableCourses.find(c => c.id === raw);
+    if (directMatch?.name) return directMatch.name;
+    const byProgrammeId = availableCourses.find(c => c.id === app?.student?.programmeId);
+    if (byProgrammeId?.name) return byProgrammeId.name;
+    return raw;
+}
+
 function populateApplicationFilters(apps) {
     const uniSelect = document.getElementById('appUniversityFilter');
     const courseSelect = document.getElementById('appCourseFilter');
     if (!uniSelect || !courseSelect) return;
     const universities = [...new Set(apps.map(a => a.universityName).filter(Boolean))].sort();
-    const courses = [...new Set(apps.map(a => a.student?.programmeName || a.student?.programmeLabel || a.student?.programme).filter(Boolean))].sort();
+    const courses = [...new Set(apps.map(a => getProgrammeDisplay(a)).filter(Boolean))].sort();
     uniSelect.innerHTML = '<option value="all">All</option>' + universities.map(u => `<option value="${u}">${u}</option>`).join('');
     courseSelect.innerHTML = '<option value="all">All</option>' + courses.map(c => `<option value="${c}">${c}</option>`).join('');
 }
@@ -330,7 +345,7 @@ function renderApplications(apps) {
         const date = app.createdAt?.toDate ? app.createdAt.toDate().toLocaleDateString() : 'N/A';
         const studentName = app.student?.name || 'N/A';
         const studentEmail = app.student?.email || 'N/A';
-        const programme = app.student?.programmeLabel || app.student?.programmeName || app.student?.programme || 'N/A';
+        const programme = getProgrammeDisplay(app);
         tbody.innerHTML += `
             <tr>
                 <td><strong>${studentName}</strong><br><span style="color:#64748b;font-size:0.8rem;">${studentEmail}</span></td>
@@ -356,11 +371,12 @@ function applyApplicationFilters() {
     const sort = document.getElementById('appSort')?.value || 'newest';
 
     let filtered = applicationsCache.filter(app => {
-        const hay = `${app.student?.name || ''} ${app.student?.email || ''} ${app.universityName || ''} ${app.student?.programme || ''}`.toLowerCase();
+        const displayProgramme = getProgrammeDisplay(app);
+        const hay = `${app.student?.name || ''} ${app.student?.email || ''} ${app.universityName || ''} ${displayProgramme}`.toLowerCase();
         if (search && !hay.includes(search)) return false;
         if (status !== 'all' && (app.status || 'new') !== status) return false;
         if (uni !== 'all' && app.universityName !== uni) return false;
-        const programme = app.student?.programmeLabel || app.student?.programmeName || app.student?.programme || '';
+        const programme = displayProgramme;
         if (course !== 'all' && programme !== course) return false;
         if (dateFrom || dateTo) {
             const created = app.createdAt?.toDate ? app.createdAt.toDate() : null;
@@ -379,8 +395,8 @@ function applyApplicationFilters() {
             case 'status': return (a.status || '').localeCompare(b.status || '');
             case 'university': return (a.universityName || '').localeCompare(b.universityName || '');
             case 'course': {
-                const ac = a.student?.programme || '';
-                const bc = b.student?.programme || '';
+                const ac = getProgrammeDisplay(a);
+                const bc = getProgrammeDisplay(b);
                 return ac.localeCompare(bc);
             }
             default: return bDate - aDate;
@@ -415,7 +431,7 @@ function openApplicationDrawer(appId) {
     document.getElementById('detailGuardian').textContent = `${app.guardian?.name || 'N/A'} • ${app.guardian?.email || ''}`;
     document.getElementById('detailGuardianContact').textContent = `${app.guardian?.phoneCode || ''} ${app.guardian?.phone || ''}`;
     document.getElementById('detailUniversity').textContent = app.universityName || 'N/A';
-    document.getElementById('detailProgramme').textContent = app.student?.programmeLabel || app.student?.programme || 'N/A';
+    document.getElementById('detailProgramme').textContent = getProgrammeDisplay(app);
     const statusSelect = document.getElementById('detailStatus');
     if (statusSelect) statusSelect.value = app.status || 'new';
     const docs = document.getElementById('detailDocuments');
@@ -512,7 +528,7 @@ function exportApplicationsCsv() {
             app.student?.name || '',
             app.student?.email || '',
             app.universityName || '',
-            app.student?.programme || '',
+            getProgrammeDisplay(app),
             app.status || '',
             date
         ]);

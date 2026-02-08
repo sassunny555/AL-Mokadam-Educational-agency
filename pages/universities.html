@@ -588,6 +588,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="../js/firebase-config.js"></script>
+    <script src="../js/currency.js"></script>
     <script src="../js/main.js"></script>
     
     <script>
@@ -636,6 +637,29 @@
         
         // Store all universities for filtering
         let allUniversities = [];
+
+        function formatFeeLabel(myrValue) {
+            if (!window.currencyManager) {
+                return `RM ${myrValue.toLocaleString()}`;
+            }
+            return window.currencyManager.formatFromMYR(myrValue, window.currencyManager.getSelectedCurrency(), 0);
+        }
+
+        function updateFeeFilterLabels() {
+            const feeSelect = document.getElementById('filterFee');
+            if (!feeSelect) return;
+
+            const optionMap = {
+                '0-10000': `Under ${formatFeeLabel(10000)}`,
+                '10000-30000': `${formatFeeLabel(10000)} - ${formatFeeLabel(30000)}`,
+                '30000-50000': `${formatFeeLabel(30000)} - ${formatFeeLabel(50000)}`,
+                '50000+': `Above ${formatFeeLabel(50000)}`
+            };
+
+            Array.from(feeSelect.options).forEach((option) => {
+                if (optionMap[option.value]) option.textContent = optionMap[option.value];
+            });
+        }
         
         // Helper to fix asset paths
         const fixPath = (path) => {
@@ -813,6 +837,7 @@
         // Real-time search on Enter key
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(loadUniversities, 500);
+            updateFeeFilterLabels();
             
             // Listen for Enter key on search input
             document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
@@ -820,6 +845,10 @@
                     applyFilters();
                 }
             });
+        });
+
+        window.addEventListener('currencychange', () => {
+            updateFeeFilterLabels();
         });
     </script>
     <script src="../js/dark-mode.js"></script>

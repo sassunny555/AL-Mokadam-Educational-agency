@@ -75,7 +75,8 @@
                             <strong>Duration:</strong> 3-4 years
                         </div>
                         <div class="course-detail-item">
-                            <strong>Avg Fees:</strong> RM 25,000 - 45,000/year
+                            <strong>Avg Fees:</strong>
+                            <span data-money-myr="25000"></span> - <span data-money-myr="45000"></span>/year
                         </div>
                     </div>
                     <div class="course-programs">
@@ -96,7 +97,8 @@
                             <strong>Duration:</strong> 4-6 years
                         </div>
                         <div class="course-detail-item">
-                            <strong>Avg Fees:</strong> RM 45,000 - 80,000/year
+                            <strong>Avg Fees:</strong>
+                            <span data-money-myr="45000"></span> - <span data-money-myr="80000"></span>/year
                         </div>
                     </div>
                     <div class="course-programs">
@@ -117,7 +119,8 @@
                             <strong>Duration:</strong> 4 years
                         </div>
                         <div class="course-detail-item">
-                            <strong>Avg Fees:</strong> RM 30,000 - 50,000/year
+                            <strong>Avg Fees:</strong>
+                            <span data-money-myr="30000"></span> - <span data-money-myr="50000"></span>/year
                         </div>
                     </div>
                     <div class="course-programs">
@@ -138,7 +141,8 @@
                             <strong>Duration:</strong> 3-4 years
                         </div>
                         <div class="course-detail-item">
-                            <strong>Avg Fees:</strong> RM 20,000 - 40,000/year
+                            <strong>Avg Fees:</strong>
+                            <span data-money-myr="20000"></span> - <span data-money-myr="40000"></span>/year
                         </div>
                     </div>
                     <div class="course-programs">
@@ -159,7 +163,8 @@
                             <strong>Duration:</strong> 3-4 years
                         </div>
                         <div class="course-detail-item">
-                            <strong>Avg Fees:</strong> RM 22,000 - 38,000/year
+                            <strong>Avg Fees:</strong>
+                            <span data-money-myr="22000"></span> - <span data-money-myr="38000"></span>/year
                         </div>
                     </div>
                     <div class="course-programs">
@@ -180,7 +185,8 @@
                             <strong>Duration:</strong> 3-4 years
                         </div>
                         <div class="course-detail-item">
-                            <strong>Avg Fees:</strong> RM 18,000 - 35,000/year
+                            <strong>Avg Fees:</strong>
+                            <span data-money-myr="18000"></span> - <span data-money-myr="35000"></span>/year
                         </div>
                     </div>
                     <div class="course-programs">
@@ -243,6 +249,15 @@
     </footer>
 
     <script src="../js/dark-mode.js"></script>
+    <script src="../js/currency.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.currencyManager?.renderMoneyNodes();
+        });
+        window.addEventListener('currencychange', () => {
+            window.currencyManager?.renderMoneyNodes();
+        });
+    </script>
 </body>
 </html>

@@ -791,6 +791,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="../js/firebase-config.js"></script>
+    <script src="../js/currency.js"></script>
     <script src="../js/main.js"></script>
     
     <script>
@@ -817,6 +818,67 @@
             if (path.startsWith('../') || path.startsWith('http')) return path;
             return '../' + path;
         };
+        let currentUniversityData = null;
+
+        function formatTuitionFromMYR(feesInMYR) {
+            if (window.currencyManager) {
+                const code = window.currencyManager.getSelectedCurrency();
+                return window.currencyManager.formatFromMYR(feesInMYR || 0, code, 0);
+            }
+            return `MYR ${(feesInMYR || 0).toLocaleString()}`;
+        }
+
+        function renderCourseCategories(uni) {
+            if (!uni?.courses || uni.courses.length === 0) {
+                document.getElementById('courseCategories').innerHTML = '<p>No courses listed yet.</p>';
+                return;
+            }
+
+            document.getElementById('coursesTitle').textContent = `${uni.name} Courses and Fees for International Students`;
+
+            const grouped = {};
+            uni.courses.forEach((course) => {
+                const category = course.category || 'Other';
+                if (!grouped[category]) grouped[category] = [];
+                grouped[category].push(course);
+            });
+
+            let coursesHtml = '';
+            Object.keys(grouped).forEach((category, index) => {
+                const courses = grouped[category];
+                coursesHtml += `
+                    <div class="course-category ${index === 0 ? 'open' : ''}">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <h4><i data-lucide="folder"></i> ${category}</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="category-courses">
+                            <table class="course-table">
+                                <thead>
+                                    <tr>
+                                        <th>Program</th>
+                                        <th>Tuition Fees per Year</th>
+                                        <th>Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${courses.map(c => `
+                                        <tr>
+                                            <td>${c.name}</td>
+                                            <td class="fees">${formatTuitionFromMYR(c.fees)}</td>
+                                            <td>${c.duration || '3-4 years'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('courseCategories').innerHTML = coursesHtml;
+            lucide.createIcons();
+        }
 
         // Countdown timer
         let countdownInterval;
@@ -876,6 +938,7 @@
 
             try {
                 const uni = await getUniversityWithCourses(uniId);
+                currentUniversityData = uni;
                 
                 if (!uni) {
                     document.getElementById('headerLoading').textContent = 'University not found';
@@ -942,55 +1005,7 @@
                 }
 
                 // Courses - grouped by category
-                if (uni.courses && uni.courses.length > 0) {
-                    document.getElementById('coursesTitle').textContent = `${uni.name} Courses and Fees for International Students`;
-                    
-                    // Group courses by category
-                    const grouped = {};
-                    uni.courses.forEach(course => {
-                        const category = course.category || 'Other';
-                        if (!grouped[category]) grouped[category] = [];
-                        grouped[category].push(course);
-                    });
-                    
-                    let coursesHtml = '';
-                    Object.keys(grouped).forEach((category, index) => {
-                        const courses = grouped[category];
-                        coursesHtml += `
-                            <div class="course-category ${index === 0 ? 'open' : ''}">
-                                <div class="category-header" onclick="toggleCategory(this)">
-                                    <h4><i data-lucide="folder"></i> ${category}</h4>
-                                    <i data-lucide="chevron-down"></i>
-                                </div>
-                                <div class="category-courses">
-                                    <table class="course-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Program</th>
-                                                <th>Tuition Fees per Year</th>
-                                                <th>Duration</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${courses.map(c => `
-                                                <tr>
-                                                    <td>${c.name}</td>
-                                                    <td class="fees">MYR ${(c.fees || 0).toLocaleString()}</td>
-                                                    <td>${c.duration || '3-4 years'}</td>
-                                                </tr>
-                                            `).join('')}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    document.getElementById('courseCategories').innerHTML = coursesHtml;
-                    lucide.createIcons();
-                } else {
-                    document.getElementById('courseCategories').innerHTML = '<p>No courses listed yet.</p>';
-                }
+                renderCourseCategories(uni);
 
                 // PropertyGuru iframe
                 if (uni.accommodationSearch) {
@@ -1007,6 +1022,10 @@
         // Load when Firebase is ready
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(loadUniversity, 500);
+        });
+
+        window.addEventListener('currencychange', () => {
+            if (currentUniversityData) renderCourseCategories(currentUniversityData);
         });
     </script>
     <script src="../js/dark-mode.js"></script>
